@@ -27,6 +27,8 @@ export function Window({
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isMaximized, setIsMaximized] = useState(false);
+  // Store previous position before maximizing to restore when un-maximizing
+  const [preMaximizePosition, setPreMaximizePosition] = useState(initialPosition);
 
   // Drag handlers remain unchanged
   const handleDragStart = (e: React.MouseEvent) => {
@@ -69,15 +71,41 @@ export function Window({
     };
   }, [isDragging]);
 
+  // Update handleMaximize to save the current position before maximizing
   const handleMaximize = () => {
+    if (!isMaximized) {
+      // Save current position before maximizing
+      setPreMaximizePosition(position);
+    }
+    
+    // Toggle maximized state
     setIsMaximized(!isMaximized);
+    
+    // Call the onMaximize callback if provided
     if (onMaximize) onMaximize();
   };
 
   return (
     <div
-      className={`absolute window ${isActive ? 'active' : ''} ${className}`}
-      style={isMaximized ? {} : { left: position.x, top: position.y }}
+      className={`absolute window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''} ${className}`}
+      style={{
+        // When maximized, position at 0,0 and take full desktop width/height 
+        // (excluding the taskbar height)
+        ...(isMaximized 
+          ? { 
+              left: 0, 
+              top: 0, 
+              width: '100%', 
+              height: 'calc(100% - 32px)', // Leave space for taskbar
+              transition: 'all 0.2s ease'
+            }
+          : { 
+              left: position.x, 
+              top: position.y,
+              transition: 'all 0.2s ease'
+            }
+        )
+      }}
     >
       {/* Outer border with classic Win95 beveled look */}
       <div className="w-full h-full flex flex-col border-solid border-[3px] box-border" 
