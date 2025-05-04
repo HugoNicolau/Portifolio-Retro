@@ -286,15 +286,48 @@ export function Desktop() {
     const position = iconPositions.find(pos => pos.id === iconId);
     if (!position) return;
     
+    // Don't start dragging immediately - wait for movement threshold
+    const initialX = e.clientX;
+    const initialY = e.clientY;
+    
     // Store the original position for potential fallback
     setDragStartPosition({ x: position.x, y: position.y });
-    setDraggingIcon(iconId);
     
     // Calculate offset from click position to icon corner
-    setDragOffset({
+    const dragOffsetTemp = {
       x: e.clientX - position.x,
       y: e.clientY - position.y
-    });
+    };
+    
+    // Use a threshold check to determine when to actually start dragging
+    const checkDragThreshold = (moveEvent: MouseEvent) => {
+      const deltaX = Math.abs(moveEvent.clientX - initialX);
+      const deltaY = Math.abs(moveEvent.clientY - initialY);
+      
+      // If movement exceeds threshold, start dragging
+      if (deltaX > 5 || deltaY > 5) {
+        window.removeEventListener('mousemove', checkDragThreshold);
+        
+        // Start actual drag
+        setDraggingIcon(iconId);
+        setDragOffset(dragOffsetTemp);
+        
+        // Add real drag handlers
+        window.addEventListener('mousemove', handleIconDragMove);
+        window.addEventListener('mouseup', handleIconDragEnd);
+      }
+    };
+    
+    // Add temporary listener to check for drag threshold
+    window.addEventListener('mousemove', checkDragThreshold);
+    
+    // If mouse is released without moving much, clean up
+    const cancelDragCheck = () => {
+      window.removeEventListener('mousemove', checkDragThreshold);
+      window.removeEventListener('mouseup', cancelDragCheck);
+    };
+    
+    window.addEventListener('mouseup', cancelDragCheck);
   };
   
   const snapToGrid = (x: number, y: number, gridSize: number = 20) => {
