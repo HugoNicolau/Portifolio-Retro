@@ -8,6 +8,7 @@ interface DesktopIconProps {
   onMouseDown?: (e: React.MouseEvent) => void;
   className?: string;
   isDragging?: boolean;
+  isSelected?: boolean;
 }
 
 export function DesktopIcon({ 
@@ -16,7 +17,8 @@ export function DesktopIcon({
   onClick,
   onMouseDown,
   className,
-  isDragging = false
+  isDragging = false,
+  isSelected = false
 }: DesktopIconProps) {
   return (
     <div 
@@ -25,10 +27,11 @@ export function DesktopIcon({
         "focus:outline-none",
         {
           "focus:bg-win95-blue focus:text-white": !isDragging,
-          "hover:bg-win95-blue/30": !isDragging,
+          "hover:bg-win95-blue/30": !isDragging && !isSelected,
           "active:bg-win95-blue active:text-white": !isDragging,
           "opacity-70": isDragging,
           "z-50": isDragging,
+          "bg-win95-blue text-white": isSelected
         },
         className
       )}
@@ -41,8 +44,11 @@ export function DesktopIcon({
         {icon}
       </div>
       <span className={cn(
-        "text-white text-center text-xs bg-transparent px-1 w-full break-words shadow-[0_1px_1px_rgba(0,0,0,0.7)]",
-        isDragging && "bg-win95-blue"
+        "text-center text-xs bg-transparent px-1 w-full break-words shadow-[0_1px_1px_rgba(0,0,0,0.7)]",
+        {
+          "text-white": isSelected || isDragging,
+          "bg-win95-blue": isDragging || isSelected
+        }
       )}>
         {name}
       </span>

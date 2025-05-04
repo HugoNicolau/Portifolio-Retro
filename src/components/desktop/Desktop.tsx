@@ -103,6 +103,23 @@ export function Desktop() {
   // 2. Track original position during drag for fallback
   const [dragStartPosition, setDragStartPosition] = useState<{x: number, y: number} | null>(null);
 
+  // Add these state variables to your Desktop component
+  const [selectionBox, setSelectionBox] = useState<{
+    isSelecting: boolean;
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+  }>({
+    isSelecting: false,
+    startX: 0,
+    startY: 0,
+    endX: 0,
+    endY: 0
+  });
+
+  const [selectedIcons, setSelectedIcons] = useState<string[]>([]);
+
   // Calculate grid dimensions based on screen size
   useEffect(() => {
     const updateGridDimensions = () => {
@@ -522,6 +539,113 @@ export function Desktop() {
     setShowContextMenu(false);
   };
 
+  // Add these handlers to manage the selection box
+  const handleDesktopMouseDown = (e: React.MouseEvent) => {
+    // Only start selection if:
+    // 1. It's a left click
+    // 2. Not clicking on an icon
+    // 3. Not clicking on any window
+    // 4. Not clicking on the taskbar
+    if (e.button !== 0) return; // Only left click
+    if ((e.target as Element).closest('.desktop-icon')) return; // Not on icon
+    if ((e.target as Element).closest('.window')) return; // Not on window
+    if ((e.target as Element).closest('.taskbar')) return; // Not on taskbar
+    
+    // Start selection
+    setSelectionBox({
+      isSelecting: true,
+      startX: e.clientX,
+      startY: e.clientY,
+      endX: e.clientX,
+      endY: e.clientY
+    });
+    
+    // Clear any previous selections
+    setSelectedIcons([]);
+  };
+
+  const handleDesktopMouseMove = (e: MouseEvent) => {
+    if (!selectionBox.isSelecting) return;
+    
+    // Update selection box end coordinates
+    setSelectionBox(prev => ({
+      ...prev,
+      endX: e.clientX,
+      endY: e.clientY
+    }));
+    
+    // Check which icons are within the selection box
+    const selectBox = {
+      left: Math.min(selectionBox.startX, e.clientX),
+      top: Math.min(selectionBox.startY, e.clientY),
+      right: Math.max(selectionBox.startX, e.clientX),
+      bottom: Math.max(selectionBox.startY, e.clientY)
+    };
+    
+    // Find which icons are within the selection
+    const newSelectedIcons = iconPositions
+      .filter(icon => {
+        const iconBox = {
+          left: icon.x,
+          top: icon.y,
+          right: icon.x + ICON_WIDTH,
+          bottom: icon.y + ICON_HEIGHT
+        };
+        
+        // Check if boxes overlap
+        return !(
+          iconBox.right < selectBox.left ||
+          iconBox.left > selectBox.right ||
+          iconBox.bottom < selectBox.top ||
+          iconBox.top > selectBox.bottom
+        );
+      })
+      .map(icon => icon.id);
+    
+    // Update selected icons
+    setSelectedIcons(newSelectedIcons);
+  };
+
+  const handleDesktopMouseUp = () => {
+    // End selection
+    setSelectionBox(prev => ({
+      ...prev,
+      isSelecting: false
+    }));
+    
+    // Keep the selected icons state
+  };
+
+  // Add event listeners for selection box
+  useEffect(() => {
+    if (selectionBox.isSelecting) {
+      window.addEventListener('mousemove', handleDesktopMouseMove);
+      window.addEventListener('mouseup', handleDesktopMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleDesktopMouseMove);
+      window.removeEventListener('mouseup', handleDesktopMouseUp);
+    }
+    
+    return () => {
+      window.removeEventListener('mousemove', handleDesktopMouseMove);
+      window.removeEventListener('mouseup', handleDesktopMouseUp);
+    };
+  }, [selectionBox.isSelecting]);
+
+  // Add this handler to clear selection when clicking on empty space
+  const handleDesktopClick = (e: React.MouseEvent) => {
+    // Don't clear if we're ending a dragging operation
+    if (selectionBox.isSelecting) return;
+    
+    // Don't clear if clicking on an icon, window, or taskbar
+    if ((e.target as Element).closest('.desktop-icon')) return;
+    if ((e.target as Element).closest('.window')) return;
+    if ((e.target as Element).closest('.taskbar')) return;
+    
+    // Clear selection
+    setSelectedIcons([]);
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black">
       {/* Monitor frame */}
@@ -533,22 +657,26 @@ export function Desktop() {
           <div 
             className="absolute inset-0 overflow-hidden flex flex-col"
             onContextMenu={handleDesktopContextMenu}
+            onMouseDown={handleDesktopMouseDown}
+            onClick={handleDesktopClick}
           >
             {/* Desktop area (flex-grow to take available space) */}
             <div 
               className="flex-grow relative overflow-hidden bg-cover bg-center"
               style={{ backgroundImage: `url(${selectedWallpaper.src})` }}
+              onMouseDown={handleDesktopMouseDown}
+              onClick={handleDesktopClick}
+              onContextMenu={handleDesktopContextMenu}
             >
               {/* Desktop icons */}
               <div className="absolute inset-0">
-                {/* Your existing icon rendering code */}
                 {/* Projects */}
                 {projects.map(project => {
                   const position = iconPositions.find(pos => pos.id === project.id);
                   return position && (
                     <div
                       key={project.id}
-                      className="absolute"
+                      className="absolute desktop-icon"
                       style={{ left: `${position.x}px`, top: `${position.y}px` }}
                     >
                       <DesktopIcon
@@ -557,6 +685,7 @@ export function Desktop() {
                         onMouseDown={(e) => handleIconDragStart(e, project.id)}
                         onClick={() => openWindow(project.id, project.title, project.content)}
                         isDragging={draggingIcon === project.id}
+                        isSelected={selectedIcons.includes(project.id)}
                       />
                     </div>
                   );
@@ -568,7 +697,7 @@ export function Desktop() {
                   return position && (
                     <div
                       key="computer"
-                      className="absolute"
+                      className="absolute desktop-icon"
                       style={{ left: `${position.x}px`, top: `${position.y}px` }}
                     >
                       <DesktopIcon
@@ -601,6 +730,7 @@ export function Desktop() {
                           </div>
                         )}
                         isDragging={draggingIcon === 'computer'}
+                        isSelected={selectedIcons.includes('computer')}
                       />
                     </div>
                   );
@@ -612,7 +742,7 @@ export function Desktop() {
                   return position && (
                     <div
                       key="about"
-                      className="absolute"
+                      className="absolute desktop-icon"
                       style={{ left: `${position.x}px`, top: `${position.y}px` }}
                     >
                       <DesktopIcon
@@ -641,6 +771,7 @@ export function Desktop() {
                           </div>
                         )}
                         isDragging={draggingIcon === 'about'}
+                        isSelected={selectedIcons.includes('about')}
                       />
                     </div>
                   );
@@ -652,7 +783,7 @@ export function Desktop() {
                   return position && (
                     <div
                       key="display-properties"
-                      className="absolute"
+                      className="absolute desktop-icon"
                       style={{ left: `${position.x}px`, top: `${position.y}px` }}
                     >
                       <DesktopIcon
@@ -661,11 +792,25 @@ export function Desktop() {
                         onMouseDown={(e) => handleIconDragStart(e, 'display-properties')}
                         onClick={openDisplayProperties}
                         isDragging={draggingIcon === 'display-properties'}
+                        isSelected={selectedIcons.includes('display-properties')}
                       />
                     </div>
                   );
                 })()}
               </div>
+              
+              {/* Selection box - render only when actively selecting */}
+              {selectionBox.isSelecting && (
+                <div 
+                  className="absolute border border-dashed border-white bg-blue-500 bg-opacity-20 z-10"
+                  style={{
+                    left: Math.min(selectionBox.startX, selectionBox.endX),
+                    top: Math.min(selectionBox.startY, selectionBox.endY),
+                    width: Math.abs(selectionBox.endX - selectionBox.startX),
+                    height: Math.abs(selectionBox.endY - selectionBox.startY)
+                  }}
+                />
+              )}
               
               {/* Context menu */}
               {showContextMenu && (
