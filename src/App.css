@@ -40,3 +40,48 @@
 .read-the-docs {
   color: #888;
 }
+
+/* CRT animations */
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.9; }
+  10% { opacity: 0.97; }
+  15% { opacity: 1; }
+  50% { opacity: 0.98; }
+  90% { opacity: 1; }
+  95% { opacity: 0.9; }
+  100% { opacity: 0.97; }
+}
+
+/* Apply CRT effect to the entire app */
+.crt-effect {
+  position: relative;
+  animation: flicker 0.15s infinite;
+  overflow: hidden;
+}
+
+.crt-effect::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(to bottom, 
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Apply retro cursor */
+.retro-cursor {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path fill='white' d='M0,0 L0,10 L2,8 L4,12 L6,11 L4,7 L7,7 z'/></svg>") 0 0, auto;
+}
