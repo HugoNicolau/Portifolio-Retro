@@ -76,13 +76,7 @@ export function Window({
 
   return (
     <div
-      className={cn(
-        "absolute",
-        isMaximized ? "inset-0 m-0" : "w-[400px] h-[300px]",
-        !isActive && "opacity-90",
-        isDragging && "cursor-grabbing",
-        className
-      )}
+      className={`absolute window ${isActive ? 'active' : ''} ${className}`}
       style={isMaximized ? {} : { left: position.x, top: position.y }}
     >
       {/* Outer border with classic Win95 beveled look */}
@@ -133,7 +127,7 @@ export function Window({
                   backgroundColor: '#c0c0c0'
                 }}
               >
-                <Square size={8} className="text-black" />
+                <Square size={10} stroke="black" strokeWidth={2} />
               </button>
               <button
                 onClick={onClose}
@@ -143,7 +137,8 @@ export function Window({
                   backgroundColor: '#c0c0c0'
                 }}
               >
-                <X size={8} className="text-black" />
+                <span style={{ color:'black', fontSize: '9px', lineHeight: 1 }}>✕</span>
+         
               </button>
             </div>
           </div>
@@ -157,8 +152,7 @@ export function Window({
           </div>
           
           {/* Window content with authentic inset look */}
-          <div className="flex-grow p-2 overflow-auto border-solid border-[2px] m-2 bg-white"
-               style={{ borderColor: '#808080 #fff #fff #808080' }}>
+          <div className="window-content p-2 overflow-auto retro-inset bg-white text-black" style={{ height: 'calc(100% - 22px)' }}>
             {children}
           </div>
           

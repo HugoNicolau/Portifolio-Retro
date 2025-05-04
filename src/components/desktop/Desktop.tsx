@@ -20,7 +20,7 @@ const projects = [
     title: 'Portfolio Site',
     icon: '🌐',
     content: (
-      <div>
+      <div className='text-black'>
         <h2 className="text-xl font-bold mb-4">Portfolio Site</h2>
         <p>This is the site you're currently viewing! A retro-styled portfolio inspired by Windows 95.</p>
         <ul className="list-disc pl-5 mt-2">
@@ -36,7 +36,7 @@ const projects = [
     title: 'Todo App',
     icon: '📝',
     content: (
-      <div>
+      <div className='text-black'>
         <h2 className="text-xl font-bold mb-4">Todo App</h2>
         <p>A simple task management application with retro UI.</p>
         <ul className="list-disc pl-5 mt-2">
@@ -70,12 +70,12 @@ export function Desktop() {
     toggleMaximize,
     focusWindow
   } = useWindows();
-  
+
   // Clock state
   const [time, setTime] = useState(new Date());
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
-  
+
   // Add state for icon positions and dragging
   const [iconPositions, setIconPositions] = useState<IconPosition[]>([]);
   const [draggingIcon, setDraggingIcon] = useState<string | null>(null);
@@ -84,7 +84,7 @@ export function Desktop() {
   // Add this state to Desktop component
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
-  
+
   // Define icon and grid dimensions
   const ICON_WIDTH = 70;
   const ICON_HEIGHT = 80;
@@ -92,16 +92,16 @@ export function Desktop() {
   const GRID_CELL_HEIGHT = 90; // Slightly taller than icon for spacing
 
   // Grid state to track which cells are occupied
-  const [grid, setGrid] = useState<{[key: string]: string}>({});
+  const [grid, setGrid] = useState<{ [key: string]: string }>({});
   const [gridDimensions, setGridDimensions] = useState({ cols: 0, rows: 0 });
 
   // Add these updates to your Desktop component
 
   // 1. Define margins to keep icons away from edges
-  const EDGE_MARGIN = 5; // pixels from the edge of the screen
+  const EDGE_MARGIN = 0; // pixels from the edge of the screen
 
   // 2. Track original position during drag for fallback
-  const [dragStartPosition, setDragStartPosition] = useState<{x: number, y: number} | null>(null);
+  const [dragStartPosition, setDragStartPosition] = useState<{ x: number, y: number } | null>(null);
 
   // Add these state variables to your Desktop component
   const [selectionBox, setSelectionBox] = useState<{
@@ -130,16 +130,16 @@ export function Desktop() {
       // Calculate number of columns and rows
       const cols = Math.floor(desktopWidth / GRID_CELL_WIDTH);
       const rows = Math.floor(desktopHeight / GRID_CELL_HEIGHT);
-      
+
       setGridDimensions({ cols, rows });
-      
+
       // Re-initialize icon positions based on new grid
       initializeIconPositions(cols, rows);
     };
 
     // Call once to initialize
     updateGridDimensions();
-    
+
     // Update on window resize
     window.addEventListener('resize', updateGridDimensions);
     return () => window.removeEventListener('resize', updateGridDimensions);
@@ -148,8 +148,8 @@ export function Desktop() {
   // 3. Update your initializeIconPositions function to respect margins
   const initializeIconPositions = (cols: number, rows: number) => {
     // Reset grid
-    const newGrid: {[key: string]: string} = {};
-    
+    const newGrid: { [key: string]: string } = {};
+
     // Get all icon IDs
     const iconIds = [
       ...projects.map(project => project.id),
@@ -157,25 +157,25 @@ export function Desktop() {
       'about',
       'display-properties'
     ];
-    
+
     // Initialize positions
     const newPositions: IconPosition[] = [];
-    
+
     // Account for margins by reducing available grid cells
     const usableCols = cols - Math.ceil(EDGE_MARGIN / GRID_CELL_WIDTH) * 2;
     const usableRows = rows - Math.ceil(EDGE_MARGIN / GRID_CELL_HEIGHT) * 2;
-    
+
     // Start position with margin
     const startCol = Math.ceil(EDGE_MARGIN / GRID_CELL_WIDTH);
     const startRow = Math.ceil(EDGE_MARGIN / GRID_CELL_HEIGHT);
-    
+
     // Place icons in column-first order (like Windows desktop)
     let col = startCol;
     let row = startRow;
-    
+
     for (let i = 0; i < iconIds.length; i++) {
       const iconId = iconIds[i];
-      
+
       // Find next available cell within usable area
       while (newGrid[`${col},${row}`] && row < startRow + usableRows) {
         row++;
@@ -185,19 +185,19 @@ export function Desktop() {
           if (col >= startCol + usableCols) break; // No more space
         }
       }
-      
+
       // If we found a spot
       if (col < startCol + usableCols && row < startRow + usableRows) {
         // Mark cell as occupied
         newGrid[`${col},${row}`] = iconId;
-        
+
         // Calculate pixel position
         newPositions.push({
           id: iconId,
           x: col * GRID_CELL_WIDTH,
           y: row * GRID_CELL_HEIGHT
         });
-        
+
         // Move to next row for next icon
         row++;
         if (row >= startRow + usableRows) {
@@ -206,7 +206,7 @@ export function Desktop() {
         }
       }
     }
-    
+
     setGrid(newGrid);
     setIconPositions(newPositions);
   };
@@ -232,7 +232,7 @@ export function Desktop() {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-  
+
   useEffect(() => {
     // Close start menu when clicking outside
     const handleDocumentClick = (e: MouseEvent) => {
@@ -240,11 +240,11 @@ export function Desktop() {
         setShowStartMenu(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleDocumentClick);
     return () => document.removeEventListener('mousedown', handleDocumentClick);
   }, [showStartMenu]);
-  
+
   const handleWallpaperChange = (wallpaperId) => {
     const newWallpaper = wallpapers.find(w => w.id === wallpaperId);
     if (newWallpaper) {
@@ -252,16 +252,16 @@ export function Desktop() {
     }
   };
 
-  // Function to open the display properties window
+  // Function to open the Select Wallpaper window
   const openDisplayProperties = () => {
     openWindow(
       'display-properties',
-      'Display Properties',
+      'Select Wallpaper',
       <div className="p-2">
-        <h2 className="text-lg font-bold mb-2">Wallpaper</h2>
+        <h2 className="text-black text-lg font-bold mb-2">Select Wallpaper</h2>
         <div className="grid grid-cols-2 gap-2 mb-4">
           {wallpapers.map(wallpaper => (
-            <div 
+            <div
               key={wallpaper.id}
               className={`border-2 cursor-pointer ${selectedWallpaper.id === wallpaper.id ? 'border-blue-500' : 'border-gray-300'}`}
               onClick={() => handleWallpaperChange(wallpaper.id)}
@@ -282,54 +282,54 @@ export function Desktop() {
   // 4. Update handleIconDragStart to track original position
   const handleIconDragStart = (e: React.MouseEvent, iconId: string) => {
     e.preventDefault(); // Prevent default browser dragging
-    
+
     const position = iconPositions.find(pos => pos.id === iconId);
     if (!position) return;
-    
+
     // Don't start dragging immediately - wait for movement threshold
     const initialX = e.clientX;
     const initialY = e.clientY;
-    
+
     // Store the original position for potential fallback
     setDragStartPosition({ x: position.x, y: position.y });
-    
+
     // Calculate offset from click position to icon corner
     const dragOffsetTemp = {
       x: e.clientX - position.x,
       y: e.clientY - position.y
     };
-    
+
     // Use a threshold check to determine when to actually start dragging
     const checkDragThreshold = (moveEvent: MouseEvent) => {
       const deltaX = Math.abs(moveEvent.clientX - initialX);
       const deltaY = Math.abs(moveEvent.clientY - initialY);
-      
+
       // If movement exceeds threshold, start dragging
       if (deltaX > 5 || deltaY > 5) {
         window.removeEventListener('mousemove', checkDragThreshold);
-        
+
         // Start actual drag
         setDraggingIcon(iconId);
         setDragOffset(dragOffsetTemp);
-        
+
         // Add real drag handlers
         window.addEventListener('mousemove', handleIconDragMove);
         window.addEventListener('mouseup', handleIconDragEnd);
       }
     };
-    
+
     // Add temporary listener to check for drag threshold
     window.addEventListener('mousemove', checkDragThreshold);
-    
+
     // If mouse is released without moving much, clean up
     const cancelDragCheck = () => {
       window.removeEventListener('mousemove', checkDragThreshold);
       window.removeEventListener('mouseup', cancelDragCheck);
     };
-    
+
     window.addEventListener('mouseup', cancelDragCheck);
   };
-  
+
   const snapToGrid = (x: number, y: number, gridSize: number = 20) => {
     return {
       x: Math.round(x / gridSize) * gridSize,
@@ -351,7 +351,7 @@ export function Desktop() {
   // Check if a position is valid (not overlapping with any other icon)
   const isValidPosition = (position: IconPosition, existingPositions: IconPosition[]): boolean => {
     return !existingPositions.some(
-      existingPos => 
+      existingPos =>
         existingPos.id !== position.id && // Don't check against itself
         isOverlapping(position, existingPos)
     );
@@ -359,19 +359,19 @@ export function Desktop() {
 
   // Find the nearest valid position
   const findNearestValidPosition = (
-    desiredPosition: IconPosition, 
+    desiredPosition: IconPosition,
     existingPositions: IconPosition[]
   ): { x: number, y: number } => {
     // Try the desired position first
     if (isValidPosition(desiredPosition, existingPositions)) {
       return { x: desiredPosition.x, y: desiredPosition.y };
     }
-    
+
     // If that's not valid, start searching in a spiral pattern
     // This will try positions in expanding rings around the desired position
     const gridSize = 20; // Grid snap size
     const maxAttempts = 100; // Prevent infinite loops
-    
+
     for (let radius = 1; radius < maxAttempts; radius++) {
       // Try positions in a square around the desired position
       for (let dx = -radius; dx <= radius; dx++) {
@@ -383,7 +383,7 @@ export function Desktop() {
               x: desiredPosition.x + dx * gridSize,
               y: desiredPosition.y + dy * gridSize
             };
-            
+
             if (isValidPosition(testPos, existingPositions)) {
               return { x: testPos.x, y: testPos.y };
             }
@@ -391,7 +391,7 @@ export function Desktop() {
         }
       }
     }
-    
+
     // If we couldn't find a valid position, return original as fallback
     return { x: desiredPosition.x, y: desiredPosition.y };
   };
@@ -399,21 +399,21 @@ export function Desktop() {
   // 5. Modify handleIconDragMove to enable fluid movement
   const handleIconDragMove = (e: MouseEvent) => {
     if (!draggingIcon) return;
-    
+
     // For fluid movement during drag, use raw position without snapping to grid
     const rawX = e.clientX - dragOffset.x;
     const rawY = e.clientY - dragOffset.y;
-    
+
     // Apply edge constraints
     const boundedX = Math.max(EDGE_MARGIN, Math.min(rawX, window.innerWidth - ICON_WIDTH - EDGE_MARGIN));
     const boundedY = Math.max(EDGE_MARGIN, Math.min(rawY, window.innerHeight - ICON_HEIGHT - 40 - EDGE_MARGIN)); // 40 for taskbar
-    
+
     // Update position without snapping during drag for fluid movement
-    setIconPositions(prev => prev.map(pos => 
+    setIconPositions(prev => prev.map(pos =>
       pos.id === draggingIcon ? { ...pos, x: boundedX, y: boundedY } : pos
     ));
   };
-  
+
   // 6. Update handleIconDragEnd to handle invalid positions and snap to grid
   const handleIconDragEnd = () => {
     if (!draggingIcon || dragStartPosition === null) {
@@ -429,47 +429,90 @@ export function Desktop() {
       setDragStartPosition(null);
       return;
     }
+
+    // Use snapToGrid to get final position
+    const snappedPosition = snapToGrid(draggedIcon.x, draggedIcon.y, GRID_CELL_WIDTH);
     
-    // Now snap to grid for final position
-    const { col, row } = positionToGridCell(draggedIcon.x, draggedIcon.y);
-    
-    // Check if this grid position is within allowed bounds
+    // Get grid cell from snapped position
+    const col = Math.floor(snappedPosition.x / GRID_CELL_WIDTH);
+    const row = Math.floor(snappedPosition.y / GRID_CELL_HEIGHT);
+
+    // Check boundaries
     const isWithinBounds = 
-      col >= Math.ceil(EDGE_MARGIN / GRID_CELL_WIDTH) && 
+      col >= Math.ceil(EDGE_MARGIN / GRID_CELL_WIDTH) &&
       row >= Math.ceil(EDGE_MARGIN / GRID_CELL_HEIGHT) &&
       col < gridDimensions.cols - Math.ceil(EDGE_MARGIN / GRID_CELL_WIDTH) &&
       row < gridDimensions.rows - Math.ceil(EDGE_MARGIN / GRID_CELL_HEIGHT);
-    
-    // Check if cell is already occupied by another icon
+
     const cellKey = `${col},${row}`;
     const occupiedBy = grid[cellKey];
+
+    // Check if position is valid: within bounds AND either unoccupied OR occupied by this icon
+    const isValidPos = isWithinBounds && (!occupiedBy || occupiedBy === draggingIcon);
     
-    if (!isWithinBounds || (occupiedBy && occupiedBy !== draggingIcon)) {
-      // Position is invalid - return to original position
-      setIconPositions(prev => prev.map(pos => 
-        pos.id === draggingIcon ? { ...pos, x: dragStartPosition.x, y: dragStartPosition.y } : pos
-      ));
+    if (!isValidPos) {
+      // Position is invalid - try to find a nearby valid position
+      // First, create position objects for all icons
+      const allPositions = iconPositions.filter(pos => pos.id !== draggingIcon);
       
-      // No need to update grid since we're returning to the original position
-    } else {
-      // Position is valid - update grid and snap to grid cell
-      const newGrid = { ...grid };
+      // Create a position object for the snapped position
+      const potentialPosition: IconPosition = {
+        id: draggingIcon,
+        x: snappedPosition.x,
+        y: snappedPosition.y
+      };
+      
+      // If the position is out of bounds, revert to original position
+      if (!isWithinBounds) {
+        setIconPositions(prev => prev.map(pos =>
+          pos.id === draggingIcon ? { ...pos, x: dragStartPosition.x, y: dragStartPosition.y } : pos
+        ));
+      } else {
+        // Try to find a nearby valid position using our spiral search function
+        const { x, y } = findNearestValidPosition(potentialPosition, allPositions);
         
-      // Remove icon from old position
+        // Convert back to grid cell
+        const newCol = Math.floor(x / GRID_CELL_WIDTH);
+        const newRow = Math.floor(y / GRID_CELL_HEIGHT);
+        const newCellKey = `${newCol},${newRow}`;
+        
+        // Update grid
+        const newGrid = { ...grid };
+        
+        // Remove icon from its previous cell
+        Object.keys(newGrid).forEach(key => {
+          if (newGrid[key] === draggingIcon) {
+            delete newGrid[key];
+          }
+        });
+        
+        // Place in new cell
+        newGrid[newCellKey] = draggingIcon;
+        setGrid(newGrid);
+        
+        // Update position
+        setIconPositions(prev => prev.map(pos =>
+          pos.id === draggingIcon ? { ...pos, x, y } : pos
+        ));
+      }
+    } else {
+      // Position is valid - update grid and position
+      const newGrid = { ...grid };
+      
+      // First, remove the icon from its current cell
       Object.keys(newGrid).forEach(key => {
         if (newGrid[key] === draggingIcon) {
           delete newGrid[key];
         }
       });
       
-      // Place in new position
+      // Then, place it in the new cell
       newGrid[cellKey] = draggingIcon;
       setGrid(newGrid);
       
-      // Snap to grid cell
-      const { x, y } = gridCellToPosition(col, row);
-      setIconPositions(prev => prev.map(pos => 
-        pos.id === draggingIcon ? { ...pos, x, y } : pos
+      // Use the snapped position for visual consistency
+      setIconPositions(prev => prev.map(pos =>
+        pos.id === draggingIcon ? { ...pos, x: snappedPosition.x, y: snappedPosition.y } : pos
       ));
     }
     
@@ -485,39 +528,39 @@ export function Desktop() {
       window.addEventListener('mousemove', handleIconDragMove);
       window.addEventListener('mouseup', handleIconDragEnd);
     }
-    
+
     return () => {
       window.removeEventListener('mousemove', handleIconDragMove);
       window.removeEventListener('mouseup', handleIconDragEnd);
     };
   }, [draggingIcon, dragOffset]);
-  
+
   // Icon click handler that differentiates between clicks and drags
   const handleIconClick = (iconId: string, onClick: () => void) => (e: React.MouseEvent) => {
     // If the mouse moved significantly, treat as drag not click
     const iconPos = iconPositions.find(p => p.id === iconId);
     if (!iconPos) return;
-    
+
     // Store start position to detect if this is a drag or click
     const startX = iconPos.x;
     const startY = iconPos.y;
-    
+
     // Start dragging
     handleIconDragStart(e, iconId);
-    
+
     // Create a one-time mouseup handler to check if this was a click
     const checkIfClick = (e: MouseEvent) => {
       window.removeEventListener('mouseup', checkIfClick);
-      
+
       const endPos = iconPositions.find(p => p.id === iconId);
       if (!endPos) return;
-      
+
       // If position hasn't moved much, consider it a click
       if (Math.abs(endPos.x - startX) < 5 && Math.abs(endPos.y - startY) < 5) {
         onClick();
       }
     };
-    
+
     window.addEventListener('mouseup', checkIfClick);
   };
 
@@ -531,9 +574,9 @@ export function Desktop() {
   // Add handler to arrange icons automatically
   const arrangeIcons = () => {
     // Reset grid
-    const newGrid: {[key: string]: string} = {};
+    const newGrid: { [key: string]: string } = {};
     const newPositions: IconPosition[] = [];
-    
+
     // Get all icon IDs
     const iconIds = [
       ...projects.map(project => project.id),
@@ -541,24 +584,24 @@ export function Desktop() {
       'about',
       'display-properties'
     ];
-    
+
     // Place icons in column-first order (like Windows desktop)
     let col = 0;
     let row = 0;
-    
+
     for (let i = 0; i < iconIds.length; i++) {
       const iconId = iconIds[i];
-      
+
       // Mark cell as occupied
       newGrid[`${col},${row}`] = iconId;
-      
+
       // Calculate pixel position
       newPositions.push({
         id: iconId,
         x: col * GRID_CELL_WIDTH,
         y: row * GRID_CELL_HEIGHT
       });
-      
+
       // Move to next row for next icon
       row++;
       if (row >= gridDimensions.rows) {
@@ -566,7 +609,7 @@ export function Desktop() {
         col++;
       }
     }
-    
+
     setGrid(newGrid);
     setIconPositions(newPositions);
     setShowContextMenu(false);
@@ -583,7 +626,7 @@ export function Desktop() {
     if ((e.target as Element).closest('.desktop-icon')) return; // Not on icon
     if ((e.target as Element).closest('.window')) return; // Not on window
     if ((e.target as Element).closest('.taskbar')) return; // Not on taskbar
-    
+
     // Start selection
     setSelectionBox({
       isSelecting: true,
@@ -592,21 +635,21 @@ export function Desktop() {
       endX: e.clientX,
       endY: e.clientY
     });
-    
+
     // Clear any previous selections
     setSelectedIcons([]);
   };
 
   const handleDesktopMouseMove = (e: MouseEvent) => {
     if (!selectionBox.isSelecting) return;
-    
+
     // Update selection box end coordinates
     setSelectionBox(prev => ({
       ...prev,
       endX: e.clientX,
       endY: e.clientY
     }));
-    
+
     // Check which icons are within the selection box
     const selectBox = {
       left: Math.min(selectionBox.startX, e.clientX),
@@ -614,7 +657,7 @@ export function Desktop() {
       right: Math.max(selectionBox.startX, e.clientX),
       bottom: Math.max(selectionBox.startY, e.clientY)
     };
-    
+
     // Find which icons are within the selection
     const newSelectedIcons = iconPositions
       .filter(icon => {
@@ -624,7 +667,7 @@ export function Desktop() {
           right: icon.x + ICON_WIDTH,
           bottom: icon.y + ICON_HEIGHT
         };
-        
+
         // Check if boxes overlap
         return !(
           iconBox.right < selectBox.left ||
@@ -634,7 +677,7 @@ export function Desktop() {
         );
       })
       .map(icon => icon.id);
-    
+
     // Update selected icons
     setSelectedIcons(newSelectedIcons);
   };
@@ -645,7 +688,7 @@ export function Desktop() {
       ...prev,
       isSelecting: false
     }));
-    
+
     // Keep the selected icons state
   };
 
@@ -658,7 +701,7 @@ export function Desktop() {
       window.removeEventListener('mousemove', handleDesktopMouseMove);
       window.removeEventListener('mouseup', handleDesktopMouseUp);
     }
-    
+
     return () => {
       window.removeEventListener('mousemove', handleDesktopMouseMove);
       window.removeEventListener('mouseup', handleDesktopMouseUp);
@@ -669,12 +712,12 @@ export function Desktop() {
   const handleDesktopClick = (e: React.MouseEvent) => {
     // Don't clear if we're ending a dragging operation
     if (selectionBox.isSelecting) return;
-    
+
     // Don't clear if clicking on an icon, window, or taskbar
     if ((e.target as Element).closest('.desktop-icon')) return;
     if ((e.target as Element).closest('.window')) return;
     if ((e.target as Element).closest('.taskbar')) return;
-    
+
     // Clear selection
     setSelectedIcons([]);
   };
@@ -685,16 +728,16 @@ export function Desktop() {
       <div className="relative w-[96%] h-[94%] bg-[#222] rounded-lg p-4 shadow-2xl monitor-frame">
         {/* Monitor screen with bezel */}
         <div className="relative w-full h-full overflow-hidden border-8 border-[#333] rounded-md monitor-screen"
-             style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }}>
+          style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }}>
           {/* Screen content - this div contains both desktop and taskbar */}
-          <div 
+          <div
             className="absolute inset-0 overflow-hidden flex flex-col"
             onContextMenu={handleDesktopContextMenu}
             onMouseDown={handleDesktopMouseDown}
             onClick={handleDesktopClick}
           >
             {/* Desktop area (flex-grow to take available space) */}
-            <div 
+            <div
               className="flex-grow relative overflow-hidden bg-cover bg-center"
               style={{ backgroundImage: `url(${selectedWallpaper.src})` }}
               onMouseDown={handleDesktopMouseDown}
@@ -723,7 +766,7 @@ export function Desktop() {
                     </div>
                   );
                 })}
-                
+
                 {/* Computer icon */}
                 {(() => {
                   const position = iconPositions.find(pos => pos.id === 'computer');
@@ -740,7 +783,7 @@ export function Desktop() {
                         onClick={() => openWindow(
                           'computer',
                           'My Computer',
-                          <div>
+                          <div className='text-black'>
                             <h2 className="text-xl font-win95 font-bold mb-4">My Computer</h2>
                             <div className="grid grid-cols-2 gap-4">
                               <div className="flex flex-col items-center">
@@ -768,7 +811,7 @@ export function Desktop() {
                     </div>
                   );
                 })()}
-                
+
                 {/* About Me icon */}
                 {(() => {
                   const position = iconPositions.find(pos => pos.id === 'about');
@@ -785,11 +828,11 @@ export function Desktop() {
                         onClick={() => openWindow(
                           'about',
                           'About Me',
-                          <div className="font-win95">
+                          <div className="font-win95 text-black">
                             <h2 className="text-xl font-bold mb-4">About Me</h2>
                             <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
                             <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
-                            
+
                             <div className="retro-outset p-2 mt-4">
                               <h3 className="font-bold mb-2">Skills:</h3>
                               <ul className="list-disc pl-5">
@@ -799,7 +842,7 @@ export function Desktop() {
                                 <li>Responsive Layouts</li>
                               </ul>
                             </div>
-                            
+
                             <button className="retro-button mt-4">Contact Me</button>
                           </div>
                         )}
@@ -810,7 +853,7 @@ export function Desktop() {
                   );
                 })()}
 
-                {/* Display Properties icon */}
+                {/* Select Wallpaper icon */}
                 {(() => {
                   const position = iconPositions.find(pos => pos.id === 'display-properties');
                   return position && (
@@ -820,7 +863,7 @@ export function Desktop() {
                       style={{ left: `${position.x}px`, top: `${position.y}px` }}
                     >
                       <DesktopIcon
-                        name="Display Properties"
+                        name="Select Wallpaper"
                         icon={<span className="text-3xl">🖼️</span>}
                         onMouseDown={(e) => handleIconDragStart(e, 'display-properties')}
                         onClick={openDisplayProperties}
@@ -831,10 +874,10 @@ export function Desktop() {
                   );
                 })()}
               </div>
-              
+
               {/* Selection box - render only when actively selecting */}
               {selectionBox.isSelecting && (
-                <div 
+                <div
                   className="absolute border border-dashed border-white bg-blue-500 bg-opacity-20 z-10"
                   style={{
                     left: Math.min(selectionBox.startX, selectionBox.endX),
@@ -844,31 +887,31 @@ export function Desktop() {
                   }}
                 />
               )}
-              
+
               {/* Context menu */}
               {showContextMenu && (
-                <div 
+                <div
                   className="fixed z-50 bg-win95-gray border-2 border-win95-shadow shadow-md py-1 w-48"
-                  style={{ 
-                    left: contextMenuPosition.x, 
+                  style={{
+                    left: contextMenuPosition.x,
                     top: contextMenuPosition.y,
                     boxShadow: '2px 2px 5px rgba(0,0,0,0.3)'
                   }}
                 >
-                  <div 
+                  <div
                     className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
                     onClick={arrangeIcons}
                   >
                     Arrange Icons
                   </div>
-                  <div 
+                  <div
                     className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
                     onClick={() => setShowContextMenu(false)}
                   >
                     Refresh
                   </div>
                   <div className="border-t border-win95-shadow my-1"></div>
-                  <div 
+                  <div
                     className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
                     onClick={() => setShowContextMenu(false)}
                   >
@@ -876,15 +919,15 @@ export function Desktop() {
                   </div>
                 </div>
               )}
-              
+
               {/* Click handler to close context menu when clicking elsewhere */}
               {showContextMenu && (
-                <div 
-                  className="fixed inset-0 z-40" 
-                  onClick={() => setShowContextMenu(false)} 
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowContextMenu(false)}
                 />
               )}
-              
+
               {/* Windows */}
               {visibleWindows.map((window) => (
                 <Window
@@ -901,73 +944,224 @@ export function Desktop() {
                 </Window>
               ))}
             </div>
-            
+
             {/* Taskbar (fixed height) */}
             <div className="h-8 bg-win95-gray border-t-2 retro-outset flex items-center z-50">
               {/* Your existing taskbar code */}
-              <button 
+              <button
                 className={`h-6 px-2 mx-1 retro-button ${showStartMenu ? 'active' : ''} flex items-center start-button`}
                 onClick={() => setShowStartMenu(!showStartMenu)}
               >
                 <span className="mr-1 text-sm">🪟</span>
                 <span className="font-bold">Start</span>
               </button>
-              
+
               {/* Start menu */}
               {showStartMenu && (
-                <div className="start-menu absolute left-0 bottom-8 w-56 bg-win95-gray retro-outset border border-black flex">
-                  <div className="w-8 bg-win95-blue h-full writing-vertical flex flex-col justify-end items-center p-2">
-                    <span className="text-white font-bold transform -rotate-90 origin-center mb-16">
-                      Windows95
-                    </span>
-                  </div>
-                  <div className="flex-grow p-1">
-                    <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center">
-                      <span className="mr-2">👤</span>
-                      <span>About Me</span>
+                <div
+                  className="start-menu absolute left-0 bottom-8 w-64 bg-win95-gray shadow-md border-2 z-[100]"
+                  style={{
+                    borderColor: '#dfdfdf #000000 #000000 #dfdfdf',
+                    boxShadow: 'inset 1px 1px 0 #ffffff, 2px 2px 2px rgba(0,0,0,0.5)'
+                  }}
+                >
+                  {/* Windows 95 side banner */}
+                  <div className="flex h-full">
+                    <div className="w-8 bg-win95-blue h-full flex flex-col justify-center items-center relative">
+                      <div className="absolute bottom-16 origin-center" style={{ transform: 'rotate(-90deg) translateX(-110px)' }}>
+                        <span className="text-black font-bold whitespace-nowrap">
+                          Nico OS
+                        </span>
+                      </div>
                     </div>
-                    <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center">
-                      <span className="mr-2">📂</span>
-                      <span>My Projects</span>
-                    </div>
-                    <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center">
-                      <span className="mr-2">📝</span>
-                      <span>Resume</span>
-                    </div>
-                    <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center">
-                      <span className="mr-2">📱</span>
-                      <span>Contact</span>
-                    </div>
-                    <div className="border-t border-gray-500 my-1"></div>
-                    <div 
-                      className="hover:bg-win95-blue hover:text-white p-1 flex items-center"
-                      onClick={() => {
-                        openDisplayProperties();
-                        setShowStartMenu(false);
-                      }}
-                    >
-                      <span className="mr-2">🖼️</span>
-                      <span>Display Properties</span>
-                    </div>
-                    <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center">
-                      <span className="mr-2">⚙️</span>
-                      <span>Settings</span>
-                    </div>
-                    <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center">
-                      <span className="mr-2">ℹ️</span>
-                      <span>Help</span>
-                    </div>
-                    <div className="border-t border-gray-500 my-1"></div>
-                    <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center">
-                      <span className="mr-2">🚪</span>
-                      <span>Shut Down...</span>
+
+                    {/* Menu items */}
+                    <div className="flex-grow p-1">
+                      <div
+                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                        onClick={() => {
+                          openWindow(
+                            'about',
+                            'About Me',
+                            <div className="font-win95">
+                              <h2 className="text-xl font-bold mb-4">About Me</h2>
+                              <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
+                              <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
+
+                              <div className="retro-outset p-2 mt-4">
+                                <h3 className="font-bold mb-2">Skills:</h3>
+                                <ul className="list-disc pl-5">
+                                  <li>React & TypeScript</li>
+                                  <li>UI/UX Design</li>
+                                  <li>Frontend Architecture</li>
+                                  <li>Responsive Layouts</li>
+                                </ul>
+                              </div>
+
+                              <button className="retro-button mt-4">Contact Me</button>
+                            </div>
+                          );
+                          setShowStartMenu(false);
+                        }}
+                      >
+                        <span className="mr-2">👤</span>
+                        <span>About Me</span>
+                      </div>
+
+                      <div
+                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                        onClick={() => {
+                          openWindow(
+                            'projects',
+                            'My Projects',
+                            <div className="font-win95 p-2 text-black">
+                              <h2 className="text-xl font-bold mb-4">My Projects</h2>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {projects.map(project => (
+                                  <div key={project.id} className="retro-outset p-2">
+                                    <div className="flex items-center mb-2">
+                                      <span className="text-2xl mr-2">{project.icon}</span>
+                                      <h3 className="font-bold">{project.title}</h3>
+                                    </div>
+                                    <p className="text-sm mb-2">Project description here</p>
+                                    <button className="retro-button text-xs">View Details</button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                          setShowStartMenu(false);
+                        }}
+                      >
+                        <span className="mr-2">📂</span>
+                        <span>My Projects</span>
+                      </div>
+
+                      <div
+                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                        onClick={() => {
+                          openWindow(
+                            'resume',
+                            'Resume',
+                            <div className="font-win95 p-2">
+                              <h2 className="text-xl font-bold mb-4">Resume</h2>
+                              <div className="retro-outset p-3">
+                                <h3 className="font-bold">Experience</h3>
+                                <ul className="list-disc pl-5 mt-1 mb-3">
+                                  <li>Web Developer, Company ABC (2022-Present)</li>
+                                  <li>Frontend Intern, XYZ Corp (2020-2022)</li>
+                                </ul>
+
+                                <h3 className="font-bold">Education</h3>
+                                <ul className="list-disc pl-5 mt-1 mb-3">
+                                  <li>B.S. Computer Science, University (2020)</li>
+                                </ul>
+
+                                <button className="retro-button mt-2">Download PDF</button>
+                              </div>
+                            </div>
+                          );
+                          setShowStartMenu(false);
+                        }}
+                      >
+                        <span className="mr-2">📝</span>
+                        <span>Resume</span>
+                      </div>
+
+                      <div
+                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                        onClick={() => {
+                          openWindow(
+                            'contact',
+                            'Contact',
+                            <div className="font-win95 p-2">
+                              <h2 className="text-xl font-bold mb-4">Contact Me</h2>
+                              <div className="retro-outset p-3">
+                                <div className="flex items-center mb-2">
+                                  <span className="mr-2">📧</span>
+                                  <span>email@example.com</span>
+                                </div>
+                                <div className="flex items-center mb-2">
+                                  <span className="mr-2">🔗</span>
+                                  <span>linkedin.com/in/username</span>
+                                </div>
+                                <div className="flex items-center mb-2">
+                                  <span className="mr-2">🐙</span>
+                                  <span>github.com/username</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                          setShowStartMenu(false);
+                        }}
+                      >
+                        <span className="mr-2">📱</span>
+                        <span>Contact</span>
+                      </div>
+
+                      <div className="border-t border-gray-400 border-b border-white my-1"></div>
+
+                      <div
+                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                        onClick={() => {
+                          openDisplayProperties();
+                          setShowStartMenu(false);
+                        }}
+                      >
+                        <span className="mr-2">🖼️</span>
+                        <span>Select Wallpaper</span>
+                      </div>
+
+                      <div
+                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                        onClick={() => {
+                          openWindow(
+                            'settings',
+                            'Settings',
+                            <div className="font-win95 p-2">
+                              <h2 className="text-xl font-bold mb-4">Settings</h2>
+                              <p>System settings would go here in a real OS.</p>
+                            </div>
+                          );
+                          setShowStartMenu(false);
+                        }}
+                      >
+                        <span className="mr-2">⚙️</span>
+                        <span>Settings</span>
+                      </div>
+
+                      <div
+                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                        onClick={() => {
+                          openWindow(
+                            'help',
+                            'Help',
+                            <div className="font-win95 p-2">
+                              <h2 className="text-xl font-bold mb-4">Help</h2>
+                              <p>This is a portfolio site styled like Windows 95.</p>
+                              <p className="mt-2">Click on desktop icons or use the Start menu to explore.</p>
+                            </div>
+                          );
+                          setShowStartMenu(false);
+                        }}
+                      >
+                        <span className="mr-2">ℹ️</span>
+                        <span>Help</span>
+                      </div>
+
+                      <div className="border-t border-gray-400 border-b border-white my-1"></div>
+
+                      <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer">
+                        <span className="mr-2">🚪</span>
+                        <span>Shut Down...</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
-              
+
               <div className="border-l-2 border-t-2 border-gray-400 h-full mx-1"></div>
-              
+
               {/* Window buttons in taskbar */}
               <div className="flex gap-1 flex-grow h-6 overflow-hidden">
                 {windows.map(window => (
@@ -981,32 +1175,32 @@ export function Desktop() {
                   </button>
                 ))}
               </div>
-              
+
               {/* Clock */}
               <div className="retro-inset h-6 px-2 mx-1 text-xs flex items-center">
                 {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
           </div>
-          
+
           {/* CRT scan effect overlay */}
           <div className="fixed inset-0 pointer-events-none z-[15] opacity-5">
             <div className="scanline"></div>
           </div>
-          
+
           {/* Screen reflection overlay */}
           <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent z-[14]"></div>
         </div>
-        
+
         {/* Monitor LED indicator */}
         <div className="absolute bottom-2 right-4 w-2 h-2 rounded-full bg-green-500 shadow-lg animate-pulse"></div>
-        
+
         {/* Monitor bottom stand */}
         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-32 h-6 bg-gradient-to-b from-[#444] to-[#222] rounded-b-lg"></div>
       </div>
-      
+
       {/* System tooltip - place outside the monitor for consistent positioning */}
-      <div 
+      <div
         className="fixed bottom-18 right-12 bg-yellow-100 text-black p-3 border-2 border-black shadow-lg max-w-xs text-sm z-[20]"
         style={{ fontFamily: 'MS Sans Serif, Arial, sans-serif' }}
       >
@@ -1015,7 +1209,7 @@ export function Desktop() {
           <span className="font-bold">Welcome to My Portfolio OS</span>
         </div>
         <p>Click on desktop icons to open applications and learn more about my projects.</p>
-        <button 
+        <button
           className="retro-button mt-2"
           onClick={(e) => (e.target as HTMLElement).parentElement?.remove()}
         >

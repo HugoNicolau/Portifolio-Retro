@@ -88,7 +88,7 @@ button:focus-visible {
   border-width: 2px;
   border-color: #fff #808080 #808080 #fff;
   padding: 2px 6px;
-  color: #000;
+  color: black;
   font-size: 12px;
   box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -207,4 +207,44 @@ button:focus-visible {
 /* Adjust z-indices of existing components */
 .scanline {
   z-index: 12;
+}
+
+/* Windows 95 styling for window content */
+.window-content {
+  color: black;
+  background-color: #fff;
+}
+
+/* Add proper styling for all headings in windows */
+.window-content h1,
+.window-content h2,
+.window-content h3,
+.window-content h4,
+.window-content h5,
+.window-content h6 {
+  color: black;
+}
+
+/* Add proper styling for paragraphs */
+.window-content p {
+  color: black;
+}
+
+/* Add these styles for window controls */
+
+.window-titlebar button {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  border-color: #dfdfdf #000 #000 #dfdfdf;
+  box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #707070 inset;
+  background-color: #c0c0c0;
+}
+
+.window-titlebar button:active {
+  border-color: #000 #dfdfdf #dfdfdf #000;
+  box-shadow: -1px -1px 0 #fff inset, 1px 1px 0 #707070 inset;
+  padding: 1px 0 0 1px;
 }

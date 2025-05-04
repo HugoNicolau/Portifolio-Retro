@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
 
 interface DesktopIconProps {
@@ -11,9 +11,9 @@ interface DesktopIconProps {
   isSelected?: boolean;
 }
 
-export function DesktopIcon({ 
-  name, 
-  icon, 
+export function DesktopIcon({
+  name,
+  icon,
   onClick,
   onMouseDown,
   className,
@@ -23,38 +23,38 @@ export function DesktopIcon({
   // Track drag vs. click
   const [mouseDownPos, setMouseDownPos] = useState<{ x: number, y: number } | null>(null);
   const clickThreshold = 5; // Pixels of movement before considering it a drag
-  
+
   const handleIconMouseDown = (e: React.MouseEvent) => {
     // Record starting position
     setMouseDownPos({ x: e.clientX, y: e.clientY });
-    
+
     // Forward to parent's onMouseDown handler
     if (onMouseDown) {
       onMouseDown(e);
     }
   };
-  
+
   const handleIconClick = (e: React.MouseEvent) => {
     // If we don't have a starting position, something went wrong
     if (!mouseDownPos) return;
-    
+
     // Check if mouse moved more than threshold (means it was a drag, not a click)
     const deltaX = Math.abs(e.clientX - mouseDownPos.x);
     const deltaY = Math.abs(e.clientY - mouseDownPos.y);
-    
+
     // Only trigger click if movement was minimal
     if (deltaX <= clickThreshold && deltaY <= clickThreshold) {
       if (onClick) onClick();
     }
-    
+
     // Reset
     setMouseDownPos(null);
   };
 
   return (
-    <div 
+    <div
       className={cn(
-        "flex flex-col items-center p-1 rounded cursor-pointer w-[70px]", 
+        "flex flex-col items-center p-1 rounded cursor-pointer w-[70px]",
         "focus:outline-none desktop-icon",
         {
           "focus:bg-win95-blue focus:text-white": !isDragging,
