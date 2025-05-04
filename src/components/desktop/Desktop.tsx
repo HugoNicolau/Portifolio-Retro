@@ -730,260 +730,112 @@ export function Desktop() {
         <div className="relative w-full h-full overflow-hidden border-8 border-[#333] rounded-md monitor-screen"
           style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }}>
           {/* Screen content - this div contains both desktop and taskbar */}
-          <div
-            className="absolute inset-0 overflow-hidden flex flex-col"
-            onContextMenu={handleDesktopContextMenu}
-            onMouseDown={handleDesktopMouseDown}
-            onClick={handleDesktopClick}
+          <div 
+            className="desktop-background w-screen h-screen"
+            style={{ 
+              userSelect: 'none', /* Prevents text selection */
+              outline: 'none',    /* Removes focus outline */
+            }}
           >
-            {/* Desktop area (flex-grow to take available space) */}
             <div
-              className="flex-grow relative overflow-hidden bg-cover bg-center"
-              style={{ backgroundImage: `url(${selectedWallpaper.src})` }}
+              className="absolute inset-0 overflow-hidden flex flex-col"
+              onContextMenu={handleDesktopContextMenu}
               onMouseDown={handleDesktopMouseDown}
               onClick={handleDesktopClick}
-              onContextMenu={handleDesktopContextMenu}
             >
-              {/* Desktop icons */}
-              <div className="absolute inset-0">
-                {/* Projects */}
-                {projects.map(project => {
-                  const position = iconPositions.find(pos => pos.id === project.id);
-                  return position && (
-                    <div
-                      key={project.id}
-                      className="absolute desktop-icon"
-                      style={{ left: `${position.x}px`, top: `${position.y}px` }}
-                    >
-                      <DesktopIcon
-                        name={project.title}
-                        icon={<span className="text-3xl">{project.icon}</span>}
-                        onMouseDown={(e) => handleIconDragStart(e, project.id)}
-                        onClick={() => openWindow(project.id, project.title, project.content)}
-                        isDragging={draggingIcon === project.id}
-                        isSelected={selectedIcons.includes(project.id)}
-                      />
-                    </div>
-                  );
-                })}
-
-                {/* Computer icon */}
-                {(() => {
-                  const position = iconPositions.find(pos => pos.id === 'computer');
-                  return position && (
-                    <div
-                      key="computer"
-                      className="absolute desktop-icon"
-                      style={{ left: `${position.x}px`, top: `${position.y}px` }}
-                    >
-                      <DesktopIcon
-                        name="My Computer"
-                        icon={<span className="text-3xl">💻</span>}
-                        onMouseDown={(e) => handleIconDragStart(e, 'computer')}
-                        onClick={() => openWindow(
-                          'computer',
-                          'My Computer',
-                          <div className='text-black'>
-                            <h2 className="text-xl font-win95 font-bold mb-4">My Computer</h2>
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="flex flex-col items-center">
-                                <span className="text-3xl">💿</span>
-                                <span className="text-sm">(C:)</span>
-                              </div>
-                              <div className="flex flex-col items-center">
-                                <span className="text-3xl">🖨️</span>
-                                <span className="text-sm">Printers</span>
-                              </div>
-                              <div className="flex flex-col items-center">
-                                <span className="text-3xl">🌐</span>
-                                <span className="text-sm">Network</span>
-                              </div>
-                              <div className="flex flex-col items-center">
-                                <span className="text-3xl">⚙️</span>
-                                <span className="text-sm">Control Panel</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        isDragging={draggingIcon === 'computer'}
-                        isSelected={selectedIcons.includes('computer')}
-                      />
-                    </div>
-                  );
-                })()}
-
-                {/* About Me icon */}
-                {(() => {
-                  const position = iconPositions.find(pos => pos.id === 'about');
-                  return position && (
-                    <div
-                      key="about"
-                      className="absolute desktop-icon"
-                      style={{ left: `${position.x}px`, top: `${position.y}px` }}
-                    >
-                      <DesktopIcon
-                        name="About Me"
-                        icon={<span className="text-3xl">👤</span>}
-                        onMouseDown={(e) => handleIconDragStart(e, 'about')}
-                        onClick={() => openWindow(
-                          'about',
-                          'About Me',
-                          <div className="font-win95 text-black">
-                            <h2 className="text-xl font-bold mb-4">About Me</h2>
-                            <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
-                            <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
-
-                            <div className="retro-outset p-2 mt-4">
-                              <h3 className="font-bold mb-2">Skills:</h3>
-                              <ul className="list-disc pl-5">
-                                <li>React & TypeScript</li>
-                                <li>UI/UX Design</li>
-                                <li>Frontend Architecture</li>
-                                <li>Responsive Layouts</li>
-                              </ul>
-                            </div>
-
-                            <button className="retro-button mt-4">Contact Me</button>
-                          </div>
-                        )}
-                        isDragging={draggingIcon === 'about'}
-                        isSelected={selectedIcons.includes('about')}
-                      />
-                    </div>
-                  );
-                })()}
-
-                {/* Select Wallpaper icon */}
-                {(() => {
-                  const position = iconPositions.find(pos => pos.id === 'display-properties');
-                  return position && (
-                    <div
-                      key="display-properties"
-                      className="absolute desktop-icon"
-                      style={{ left: `${position.x}px`, top: `${position.y}px` }}
-                    >
-                      <DesktopIcon
-                        name="Select Wallpaper"
-                        icon={<span className="text-3xl">🖼️</span>}
-                        onMouseDown={(e) => handleIconDragStart(e, 'display-properties')}
-                        onClick={openDisplayProperties}
-                        isDragging={draggingIcon === 'display-properties'}
-                        isSelected={selectedIcons.includes('display-properties')}
-                      />
-                    </div>
-                  );
-                })()}
-              </div>
-
-              {/* Selection box - render only when actively selecting */}
-              {selectionBox.isSelecting && (
-                <div
-                  className="absolute border border-dashed border-white bg-blue-500 bg-opacity-20 z-10"
-                  style={{
-                    left: Math.min(selectionBox.startX, selectionBox.endX),
-                    top: Math.min(selectionBox.startY, selectionBox.endY),
-                    width: Math.abs(selectionBox.endX - selectionBox.startX),
-                    height: Math.abs(selectionBox.endY - selectionBox.startY)
-                  }}
-                />
-              )}
-
-              {/* Context menu */}
-              {showContextMenu && (
-                <div
-                  className="fixed z-50 bg-win95-gray border-2 border-win95-shadow shadow-md py-1 w-48"
-                  style={{
-                    left: contextMenuPosition.x,
-                    top: contextMenuPosition.y,
-                    boxShadow: '2px 2px 5px rgba(0,0,0,0.3)'
-                  }}
-                >
-                  <div
-                    className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
-                    onClick={arrangeIcons}
-                  >
-                    Arrange Icons
-                  </div>
-                  <div
-                    className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
-                    onClick={() => setShowContextMenu(false)}
-                  >
-                    Refresh
-                  </div>
-                  <div className="border-t border-win95-shadow my-1"></div>
-                  <div
-                    className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
-                    onClick={() => setShowContextMenu(false)}
-                  >
-                    Properties
-                  </div>
-                </div>
-              )}
-
-              {/* Click handler to close context menu when clicking elsewhere */}
-              {showContextMenu && (
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setShowContextMenu(false)}
-                />
-              )}
-
-              {/* Windows */}
-              {visibleWindows.map((window) => (
-                <Window
-                  key={window.id}
-                  title={window.title}
-                  isActive={activeWindowId === window.id}
-                  initialPosition={{ x: 50 + Math.random() * 100, y: 50 + Math.random() * 50 }}
-                  onClose={() => closeWindow(window.id)}
-                  onMinimize={() => minimizeWindow(window.id)}
-                  onMaximize={() => toggleMaximize(window.id)}
-                  className={`z-[${window.zIndex}]`}
-                >
-                  {window.content}
-                </Window>
-              ))}
-            </div>
-
-            {/* Taskbar (fixed height) */}
-            <div className="h-8 bg-win95-gray border-t-2 retro-outset flex items-center z-50">
-              {/* Your existing taskbar code */}
-              <button
-                className={`h-6 px-2 mx-1 retro-button ${showStartMenu ? 'active' : ''} flex items-center start-button`}
-                onClick={() => setShowStartMenu(!showStartMenu)}
+              {/* Desktop area (flex-grow to take available space) */}
+              <div
+                className="flex-grow relative overflow-hidden bg-cover bg-center"
+                style={{ backgroundImage: `url(${selectedWallpaper.src})` }}
+                onMouseDown={handleDesktopMouseDown}
+                onClick={handleDesktopClick}
+                onContextMenu={handleDesktopContextMenu}
               >
-                <span className="mr-1 text-sm">🪟</span>
-                <span className="font-bold">Start</span>
-              </button>
-
-              {/* Start menu */}
-              {showStartMenu && (
-                <div
-                  className="start-menu absolute left-0 bottom-8 w-64 bg-win95-gray shadow-md border-2 z-[100]"
-                  style={{
-                    borderColor: '#dfdfdf #000000 #000000 #dfdfdf',
-                    boxShadow: 'inset 1px 1px 0 #ffffff, 2px 2px 2px rgba(0,0,0,0.5)'
-                  }}
-                >
-                  {/* Windows 95 side banner */}
-                  <div className="flex h-full">
-                    <div className="w-8 bg-win95-blue h-full flex flex-col justify-center items-center relative">
-                      <div className="absolute bottom-16 origin-center" style={{ transform: 'rotate(-90deg) translateX(-110px)' }}>
-                        <span className="text-black font-bold whitespace-nowrap">
-                          Nico OS
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Menu items */}
-                    <div className="flex-grow p-1">
+                {/* Desktop icons */}
+                <div className="absolute inset-0">
+                  {/* Projects */}
+                  {projects.map(project => {
+                    const position = iconPositions.find(pos => pos.id === project.id);
+                    return position && (
                       <div
-                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                        onClick={() => {
-                          openWindow(
+                        key={project.id}
+                        className="absolute desktop-icon"
+                        style={{ left: `${position.x}px`, top: `${position.y}px` }}
+                      >
+                        <DesktopIcon
+                          name={project.title}
+                          icon={<span className="text-3xl">{project.icon}</span>}
+                          onMouseDown={(e) => handleIconDragStart(e, project.id)}
+                          onClick={() => openWindow(project.id, project.title, project.content)}
+                          isDragging={draggingIcon === project.id}
+                          isSelected={selectedIcons.includes(project.id)}
+                        />
+                      </div>
+                    );
+                  })}
+
+                  {/* Computer icon */}
+                  {(() => {
+                    const position = iconPositions.find(pos => pos.id === 'computer');
+                    return position && (
+                      <div
+                        key="computer"
+                        className="absolute desktop-icon"
+                        style={{ left: `${position.x}px`, top: `${position.y}px` }}
+                      >
+                        <DesktopIcon
+                          name="My Computer"
+                          icon={<span className="text-3xl">💻</span>}
+                          onMouseDown={(e) => handleIconDragStart(e, 'computer')}
+                          onClick={() => openWindow(
+                            'computer',
+                            'My Computer',
+                            <div className='text-black'>
+                              <h2 className="text-xl font-win95 font-bold mb-4">My Computer</h2>
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="flex flex-col items-center">
+                                  <span className="text-3xl">💿</span>
+                                  <span className="text-sm">(C:)</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <span className="text-3xl">🖨️</span>
+                                  <span className="text-sm">Printers</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <span className="text-3xl">🌐</span>
+                                  <span className="text-sm">Network</span>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <span className="text-3xl">⚙️</span>
+                                  <span className="text-sm">Control Panel</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          isDragging={draggingIcon === 'computer'}
+                          isSelected={selectedIcons.includes('computer')}
+                        />
+                      </div>
+                    );
+                  })()}
+
+                  {/* About Me icon */}
+                  {(() => {
+                    const position = iconPositions.find(pos => pos.id === 'about');
+                    return position && (
+                      <div
+                        key="about"
+                        className="absolute desktop-icon"
+                        style={{ left: `${position.x}px`, top: `${position.y}px` }}
+                      >
+                        <DesktopIcon
+                          name="About Me"
+                          icon={<span className="text-3xl">👤</span>}
+                          onMouseDown={(e) => handleIconDragStart(e, 'about')}
+                          onClick={() => openWindow(
                             'about',
                             'About Me',
-                            <div className="font-win95">
+                            <div className="font-win95 text-black">
                               <h2 className="text-xl font-bold mb-4">About Me</h2>
                               <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
                               <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
@@ -1000,185 +852,341 @@ export function Desktop() {
 
                               <button className="retro-button mt-4">Contact Me</button>
                             </div>
-                          );
-                          setShowStartMenu(false);
-                        }}
-                      >
-                        <span className="mr-2">👤</span>
-                        <span>About Me</span>
+                          )}
+                          isDragging={draggingIcon === 'about'}
+                          isSelected={selectedIcons.includes('about')}
+                        />
                       </div>
+                    );
+                  })()}
 
+                  {/* Select Wallpaper icon */}
+                  {(() => {
+                    const position = iconPositions.find(pos => pos.id === 'display-properties');
+                    return position && (
                       <div
-                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                        onClick={() => {
-                          openWindow(
-                            'projects',
-                            'My Projects',
-                            <div className="font-win95 p-2 text-black">
-                              <h2 className="text-xl font-bold mb-4">My Projects</h2>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {projects.map(project => (
-                                  <div key={project.id} className="retro-outset p-2">
-                                    <div className="flex items-center mb-2">
-                                      <span className="text-2xl mr-2">{project.icon}</span>
-                                      <h3 className="font-bold">{project.title}</h3>
-                                    </div>
-                                    <p className="text-sm mb-2">Project description here</p>
-                                    <button className="retro-button text-xs">View Details</button>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          );
-                          setShowStartMenu(false);
-                        }}
+                        key="display-properties"
+                        className="absolute desktop-icon"
+                        style={{ left: `${position.x}px`, top: `${position.y}px` }}
                       >
-                        <span className="mr-2">📂</span>
-                        <span>My Projects</span>
+                        <DesktopIcon
+                          name="Select Wallpaper"
+                          icon={<span className="text-3xl">🖼️</span>}
+                          onMouseDown={(e) => handleIconDragStart(e, 'display-properties')}
+                          onClick={openDisplayProperties}
+                          isDragging={draggingIcon === 'display-properties'}
+                          isSelected={selectedIcons.includes('display-properties')}
+                        />
                       </div>
+                    );
+                  })()}
+                </div>
 
-                      <div
-                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                        onClick={() => {
-                          openWindow(
-                            'resume',
-                            'Resume',
-                            <div className="font-win95 p-2">
-                              <h2 className="text-xl font-bold mb-4">Resume</h2>
-                              <div className="retro-outset p-3">
-                                <h3 className="font-bold">Experience</h3>
-                                <ul className="list-disc pl-5 mt-1 mb-3">
-                                  <li>Web Developer, Company ABC (2022-Present)</li>
-                                  <li>Frontend Intern, XYZ Corp (2020-2022)</li>
-                                </ul>
+                {/* Selection box - render only when actively selecting */}
+                {selectionBox.isSelecting && (
+                  <div
+                    className="absolute border border-dashed border-white bg-blue-500/20 bg-opacity-20% z-10"
+                    style={{
+                      left: Math.min(selectionBox.startX, selectionBox.endX),
+                      top: Math.min(selectionBox.startY, selectionBox.endY),
+                      width: Math.abs(selectionBox.endX - selectionBox.startX),
+                      height: Math.abs(selectionBox.endY - selectionBox.startY)
+                    }}
+                  />
+                )}
 
-                                <h3 className="font-bold">Education</h3>
-                                <ul className="list-disc pl-5 mt-1 mb-3">
-                                  <li>B.S. Computer Science, University (2020)</li>
-                                </ul>
-
-                                <button className="retro-button mt-2">Download PDF</button>
-                              </div>
-                            </div>
-                          );
-                          setShowStartMenu(false);
-                        }}
-                      >
-                        <span className="mr-2">📝</span>
-                        <span>Resume</span>
-                      </div>
-
-                      <div
-                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                        onClick={() => {
-                          openWindow(
-                            'contact',
-                            'Contact',
-                            <div className="font-win95 p-2">
-                              <h2 className="text-xl font-bold mb-4">Contact Me</h2>
-                              <div className="retro-outset p-3">
-                                <div className="flex items-center mb-2">
-                                  <span className="mr-2">📧</span>
-                                  <span>email@example.com</span>
-                                </div>
-                                <div className="flex items-center mb-2">
-                                  <span className="mr-2">🔗</span>
-                                  <span>linkedin.com/in/username</span>
-                                </div>
-                                <div className="flex items-center mb-2">
-                                  <span className="mr-2">🐙</span>
-                                  <span>github.com/username</span>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                          setShowStartMenu(false);
-                        }}
-                      >
-                        <span className="mr-2">📱</span>
-                        <span>Contact</span>
-                      </div>
-
-                      <div className="border-t border-gray-400 border-b border-white my-1"></div>
-
-                      <div
-                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                        onClick={() => {
-                          openDisplayProperties();
-                          setShowStartMenu(false);
-                        }}
-                      >
-                        <span className="mr-2">🖼️</span>
-                        <span>Select Wallpaper</span>
-                      </div>
-
-                      <div
-                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                        onClick={() => {
-                          openWindow(
-                            'settings',
-                            'Settings',
-                            <div className="font-win95 p-2">
-                              <h2 className="text-xl font-bold mb-4">Settings</h2>
-                              <p>System settings would go here in a real OS.</p>
-                            </div>
-                          );
-                          setShowStartMenu(false);
-                        }}
-                      >
-                        <span className="mr-2">⚙️</span>
-                        <span>Settings</span>
-                      </div>
-
-                      <div
-                        className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                        onClick={() => {
-                          openWindow(
-                            'help',
-                            'Help',
-                            <div className="font-win95 p-2">
-                              <h2 className="text-xl font-bold mb-4">Help</h2>
-                              <p>This is a portfolio site styled like Windows 95.</p>
-                              <p className="mt-2">Click on desktop icons or use the Start menu to explore.</p>
-                            </div>
-                          );
-                          setShowStartMenu(false);
-                        }}
-                      >
-                        <span className="mr-2">ℹ️</span>
-                        <span>Help</span>
-                      </div>
-
-                      <div className="border-t border-gray-400 border-b border-white my-1"></div>
-
-                      <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer">
-                        <span className="mr-2">🚪</span>
-                        <span>Shut Down...</span>
-                      </div>
+                {/* Context menu */}
+                {showContextMenu && (
+                  <div
+                    className="fixed z-50 bg-win95-gray border-2 border-win95-shadow shadow-md py-1 w-48"
+                    style={{
+                      left: contextMenuPosition.x,
+                      top: contextMenuPosition.y,
+                      boxShadow: '2px 2px 5px rgba(0,0,0,0.3)'
+                    }}
+                  >
+                    <div
+                      className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
+                      onClick={arrangeIcons}
+                    >
+                      Arrange Icons
+                    </div>
+                    <div
+                      className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
+                      onClick={() => setShowContextMenu(false)}
+                    >
+                      Refresh
+                    </div>
+                    <div className="border-t border-win95-shadow my-1"></div>
+                    <div
+                      className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
+                      onClick={() => setShowContextMenu(false)}
+                    >
+                      Properties
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              <div className="border-l-2 border-t-2 border-gray-400 h-full mx-1"></div>
+                {/* Click handler to close context menu when clicking elsewhere */}
+                {showContextMenu && (
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowContextMenu(false)}
+                  />
+                )}
 
-              {/* Window buttons in taskbar */}
-              <div className="flex gap-1 flex-grow h-6 overflow-hidden">
-                {windows.map(window => (
-                  <button
+                {/* Windows */}
+                {visibleWindows.map((window) => (
+                  <Window
                     key={window.id}
-                    className={`retro-button min-w-[120px] max-w-[200px] h-full text-left truncate text-xs flex items-center ${activeWindowId === window.id ? 'bg-gray-300 retro-inset' : ''}`}
-                    onClick={() => focusWindow(window.id)}
+                    title={window.title}
+                    isActive={activeWindowId === window.id}
+                    initialPosition={{ x: 50 + Math.random() * 100, y: 50 + Math.random() * 50 }}
+                    onClose={() => closeWindow(window.id)}
+                    onMinimize={() => minimizeWindow(window.id)}
+                    onMaximize={() => toggleMaximize(window.id)}
+                    className={`z-[${window.zIndex}]`}
                   >
-                    <span className="mr-1">📄</span>
-                    {window.title}
-                  </button>
+                    {window.content}
+                  </Window>
                 ))}
               </div>
 
-              {/* Clock */}
-              <div className="retro-inset h-6 px-2 mx-1 text-xs flex items-center">
-                {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {/* Taskbar (fixed height) */}
+              <div className="h-8 bg-win95-gray border-t-2 retro-outset flex items-center z-50">
+                {/* Your existing taskbar code */}
+                <button
+                  className={`h-6 px-2 mx-1 retro-button ${showStartMenu ? 'active' : ''} flex items-center start-button`}
+                  onClick={() => setShowStartMenu(!showStartMenu)}
+                >
+                  <span className="mr-1 text-sm">🪟</span>
+                  <span className="font-bold">Start</span>
+                </button>
+
+                {/* Start menu */}
+                {showStartMenu && (
+                  <div
+                    className="start-menu absolute left-0 bottom-8 w-64 bg-win95-gray shadow-md border-2 z-[100]"
+                    style={{
+                      borderColor: '#dfdfdf #000000 #000000 #dfdfdf',
+                      boxShadow: 'inset 1px 1px 0 #ffffff, 2px 2px 2px rgba(0,0,0,0.5)'
+                    }}
+                  >
+                    {/* Windows 95 side banner */}
+                    <div className="flex h-full">
+                      <div className="w-8 bg-win95-blue h-full flex flex-col justify-center items-center relative">
+                        <div className="absolute bottom-16 origin-center" style={{ transform: 'rotate(-90deg) translateX(-110px)' }}>
+                          <span className="text-black font-bold whitespace-nowrap">
+                            Nico OS
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Menu items */}
+                      <div className="flex-grow p-1">
+                        <div
+                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                          onClick={() => {
+                            openWindow(
+                              'about',
+                              'About Me',
+                              <div className="font-win95">
+                                <h2 className="text-xl font-bold mb-4">About Me</h2>
+                                <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
+                                <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
+
+                                <div className="retro-outset p-2 mt-4">
+                                  <h3 className="font-bold mb-2">Skills:</h3>
+                                  <ul className="list-disc pl-5">
+                                    <li>React & TypeScript</li>
+                                    <li>UI/UX Design</li>
+                                    <li>Frontend Architecture</li>
+                                    <li>Responsive Layouts</li>
+                                  </ul>
+                                </div>
+
+                                <button className="retro-button mt-4">Contact Me</button>
+                              </div>
+                            );
+                            setShowStartMenu(false);
+                          }}
+                        >
+                          <span className="mr-2">👤</span>
+                          <span>About Me</span>
+                        </div>
+
+                        <div
+                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                          onClick={() => {
+                            openWindow(
+                              'projects',
+                              'My Projects',
+                              <div className="font-win95 p-2 text-black">
+                                <h2 className="text-xl font-bold mb-4">My Projects</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {projects.map(project => (
+                                    <div key={project.id} className="retro-outset p-2">
+                                      <div className="flex items-center mb-2">
+                                        <span className="text-2xl mr-2">{project.icon}</span>
+                                        <h3 className="font-bold">{project.title}</h3>
+                                      </div>
+                                      <p className="text-sm mb-2">Project description here</p>
+                                      <button className="retro-button text-xs">View Details</button>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                            setShowStartMenu(false);
+                          }}
+                        >
+                          <span className="mr-2">📂</span>
+                          <span>My Projects</span>
+                        </div>
+
+                        <div
+                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                          onClick={() => {
+                            openWindow(
+                              'resume',
+                              'Resume',
+                              <div className="font-win95 p-2">
+                                <h2 className="text-xl font-bold mb-4">Resume</h2>
+                                <div className="retro-outset p-3">
+                                  <h3 className="font-bold">Experience</h3>
+                                  <ul className="list-disc pl-5 mt-1 mb-3">
+                                    <li>Web Developer, Company ABC (2022-Present)</li>
+                                    <li>Frontend Intern, XYZ Corp (2020-2022)</li>
+                                  </ul>
+
+                                  <h3 className="font-bold">Education</h3>
+                                  <ul className="list-disc pl-5 mt-1 mb-3">
+                                    <li>B.S. Computer Science, University (2020)</li>
+                                  </ul>
+
+                                  <button className="retro-button mt-2">Download PDF</button>
+                                </div>
+                              </div>
+                            );
+                            setShowStartMenu(false);
+                          }}
+                        >
+                          <span className="mr-2">📝</span>
+                          <span>Resume</span>
+                        </div>
+
+                        <div
+                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                          onClick={() => {
+                            openWindow(
+                              'contact',
+                              'Contact',
+                              <div className="font-win95 p-2">
+                                <h2 className="text-xl font-bold mb-4">Contact Me</h2>
+                                <div className="retro-outset p-3">
+                                  <div className="flex items-center mb-2">
+                                    <span className="mr-2">📧</span>
+                                    <span>email@example.com</span>
+                                  </div>
+                                  <div className="flex items-center mb-2">
+                                    <span className="mr-2">🔗</span>
+                                    <span>linkedin.com/in/username</span>
+                                  </div>
+                                  <div className="flex items-center mb-2">
+                                    <span className="mr-2">🐙</span>
+                                    <span>github.com/username</span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                            setShowStartMenu(false);
+                          }}
+                        >
+                          <span className="mr-2">📱</span>
+                          <span>Contact</span>
+                        </div>
+
+                        <div className="border-t border-gray-400 border-b border-white my-1"></div>
+
+                        <div
+                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                          onClick={() => {
+                            openDisplayProperties();
+                            setShowStartMenu(false);
+                          }}
+                        >
+                          <span className="mr-2">🖼️</span>
+                          <span>Select Wallpaper</span>
+                        </div>
+
+                        <div
+                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                          onClick={() => {
+                            openWindow(
+                              'settings',
+                              'Settings',
+                              <div className="font-win95 p-2">
+                                <h2 className="text-xl font-bold mb-4">Settings</h2>
+                                <p>System settings would go here in a real OS.</p>
+                              </div>
+                            );
+                            setShowStartMenu(false);
+                          }}
+                        >
+                          <span className="mr-2">⚙️</span>
+                          <span>Settings</span>
+                        </div>
+
+                        <div
+                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
+                          onClick={() => {
+                            openWindow(
+                              'help',
+                              'Help',
+                              <div className="font-win95 p-2">
+                                <h2 className="text-xl font-bold mb-4">Help</h2>
+                                <p>This is a portfolio site styled like Windows 95.</p>
+                                <p className="mt-2">Click on desktop icons or use the Start menu to explore.</p>
+                              </div>
+                            );
+                            setShowStartMenu(false);
+                          }}
+                        >
+                          <span className="mr-2">ℹ️</span>
+                          <span>Help</span>
+                        </div>
+
+                        <div className="border-t border-gray-400 border-b border-white my-1"></div>
+
+                        <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer">
+                          <span className="mr-2">🚪</span>
+                          <span>Shut Down...</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="border-l-2 border-t-2 border-gray-400 h-full mx-1"></div>
+
+                {/* Window buttons in taskbar */}
+                <div className="flex gap-1 flex-grow h-6 overflow-hidden">
+                  {windows.map(window => (
+                    <button
+                      key={window.id}
+                      className={`retro-button min-w-[120px] max-w-[200px] h-full text-left truncate text-xs flex items-center ${activeWindowId === window.id ? 'bg-gray-300 retro-inset' : ''}`}
+                      onClick={() => focusWindow(window.id)}
+                    >
+                      <span className="mr-1">📄</span>
+                      {window.title}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Clock */}
+                <div className="retro-inset h-6 px-2 mx-1 text-xs flex items-center">
+                  {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
               </div>
             </div>
           </div>

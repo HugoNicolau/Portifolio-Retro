@@ -248,3 +248,25 @@ button:focus-visible {
   box-shadow: -1px -1px 0 #fff inset, 1px 1px 0 #707070 inset;
   padding: 1px 0 0 1px;
 }
+
+/* Selection highlight with reduced opacity */
+::selection {
+  background-color: rgba(0, 0, 128, 0.3); /* Windows 95/98 blue with 30% opacity */
+  color: inherit;
+}
+
+/* For Firefox */
+::-moz-selection {
+  background-color: rgba(0, 0, 128, 0.3);
+  color: inherit;
+}
+
+/* For empty selection (when clicking on empty areas) */
+.window-content:focus {
+  outline: none;
+}
+
+/* For desktop/background area */
+.desktop-background::selection {
+  background-color: rgba(0, 0, 128, 0.2); /* Even lighter */
+}
