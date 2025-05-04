@@ -17,15 +17,18 @@ export function DesktopIcon({
   return (
     <div 
       className={cn(
-        "flex flex-col items-center p-2 rounded hover:bg-white/10 transition-colors cursor-pointer w-20", 
+        "flex flex-col items-center p-1 rounded cursor-pointer w-[70px]", 
+        "focus:outline-none focus:bg-win95-blue focus:text-white",
+        "hover:bg-win95-blue/30 active:bg-win95-blue active:text-white",
         className
       )}
       onClick={onClick}
+      tabIndex={0}
     >
-      <div className="w-12 h-12 mb-1 flex items-center justify-center">
+      <div className="w-10 h-10 mb-1 flex items-center justify-center">
         {icon}
       </div>
-      <span className="text-white text-xs text-center bg-black/50 px-1 max-w-[76px] break-words">
+      <span className="text-white text-center text-xs bg-transparent px-1 w-full break-words shadow-[0_1px_1px_rgba(0,0,0,0.7)]">
         {name}
       </span>
     </div>

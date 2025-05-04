@@ -28,7 +28,7 @@ export function Window({
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isMaximized, setIsMaximized] = useState(false);
 
-  // Drag start handler
+  // Drag handlers remain unchanged
   const handleDragStart = (e: React.MouseEvent) => {
     if (isMaximized) return;
     
@@ -38,11 +38,9 @@ export function Window({
       y: e.clientY - position.y,
     });
     
-    // Prevent text selection during drag
     e.preventDefault();
   };
 
-  // Drag handler
   const handleDrag = (e: MouseEvent) => {
     if (!isDragging) return;
     
@@ -52,12 +50,10 @@ export function Window({
     });
   };
 
-  // Drag end handler
   const handleDragEnd = () => {
     setIsDragging(false);
   };
 
-  // Set up event listeners for drag
   React.useEffect(() => {
     if (isDragging) {
       window.addEventListener('mousemove', handleDrag);
@@ -73,7 +69,6 @@ export function Window({
     };
   }, [isDragging]);
 
-  // Handle window maximize toggle
   const handleMaximize = () => {
     setIsMaximized(!isMaximized);
     if (onMaximize) onMaximize();
@@ -82,7 +77,7 @@ export function Window({
   return (
     <div
       className={cn(
-        "absolute shadow-window bg-retro-window border-2 border-retro-border",
+        "absolute",
         isMaximized ? "inset-0 m-0" : "w-[400px] h-[300px]",
         !isActive && "opacity-90",
         isDragging && "cursor-grabbing",
@@ -90,42 +85,95 @@ export function Window({
       )}
       style={isMaximized ? {} : { left: position.x, top: position.y }}
     >
-      {/* Window titlebar */}
-      <div
-        className={cn(
-          "bg-retro-taskbar h-7 flex items-center justify-between px-2",
-          isDragging ? "cursor-grabbing" : "cursor-grab"
-        )}
-        onMouseDown={handleDragStart}
-      >
-        <div className="font-bold text-sm">{title}</div>
-        <div className="flex gap-1">
-          {onMinimize && (
-            <button
-              onClick={onMinimize}
-              className="bg-retro-window p-0.5 w-5 h-5 flex items-center justify-center"
-            >
-              <Minus size={12} />
-            </button>
-          )}
-          <button
-            onClick={handleMaximize}
-            className="bg-retro-window p-0.5 w-5 h-5 flex items-center justify-center"
+      {/* Outer border with classic Win95 beveled look */}
+      <div className="w-full h-full flex flex-col border-solid border-[3px] box-border" 
+           style={{ 
+             borderColor: '#dfdfdf #000 #000 #dfdfdf',
+             boxShadow: '1px 1px 0 0 rgba(0,0,0,0.3)'
+           }}>
+        {/* Inner border - the second bevel */}
+        <div className="flex-grow flex flex-col border-solid border-[2px] box-border bg-retro-window"
+             style={{ borderColor: '#fff #808080 #808080 #fff' }}>
+          {/* Window titlebar */}
+          <div
+            className={cn(
+              "flex items-center justify-between px-1",
+              isDragging ? "cursor-grabbing" : "cursor-grab",
+              isActive ? "bg-retro-taskbar text-white" : "bg-gray-400 text-gray-200"
+            )}
+            style={{ height: "22px" }}
+            onMouseDown={handleDragStart}
           >
-            <Square size={12} />
-          </button>
-          <button
-            onClick={onClose}
-            className="bg-retro-window p-0.5 w-5 h-5 flex items-center justify-center text-black hover:text-red-600"
-          >
-            <X size={12} />
-          </button>
+            {/* Windows 95/98 window icon and title */}
+            <div className="flex items-center">
+              <div className="w-4 h-4 flex items-center justify-center mr-1">
+                {/* Window icon would go here if you have one */}
+              </div>
+              <div className="font-bold text-sm truncate pr-1">{title}</div>
+            </div>
+            
+            <div className="flex">
+              {onMinimize && (
+                <button
+                  onClick={onMinimize}
+                  className="w-[16px] h-[14px] flex items-center justify-center mr-1 border-solid border"
+                  style={{ 
+                    borderColor: '#fff #808080 #808080 #fff',
+                    backgroundColor: '#c0c0c0'
+                  }}
+                >
+                  <Minus size={8} className="text-black" />
+                </button>
+              )}
+              <button
+                onClick={handleMaximize}
+                className="w-[16px] h-[14px] flex items-center justify-center mr-1 border-solid border"
+                style={{ 
+                  borderColor: '#fff #808080 #808080 #fff',
+                  backgroundColor: '#c0c0c0'
+                }}
+              >
+                <Square size={8} className="text-black" />
+              </button>
+              <button
+                onClick={onClose}
+                className="w-[16px] h-[14px] flex items-center justify-center border-solid border"
+                style={{ 
+                  borderColor: '#fff #808080 #808080 #fff',
+                  backgroundColor: '#c0c0c0'
+                }}
+              >
+                <X size={8} className="text-black" />
+              </button>
+            </div>
+          </div>
+          
+          {/* Menu bar - typical in Win95 apps */}
+          <div className="h-[20px] border-b border-gray-300 flex items-center px-1 text-xs text-black">
+            <span className="mr-4 cursor-pointer hover:underline">File</span>
+            <span className="mr-4 cursor-pointer hover:underline">Edit</span>
+            <span className="mr-4 cursor-pointer hover:underline">View</span>
+            <span className="mr-4 cursor-pointer hover:underline">Help</span>
+          </div>
+          
+          {/* Window content with authentic inset look */}
+          <div className="flex-grow p-2 overflow-auto border-solid border-[2px] m-2 bg-white"
+               style={{ borderColor: '#808080 #fff #fff #808080' }}>
+            {children}
+          </div>
+          
+          {/* Status bar - common in Win95 apps */}
+          <div className="h-[18px] px-2 text-xs flex items-center border-t border-gray-300 text-black">
+            <div className="border-solid border mr-2 px-2 py-0 text-left flex-grow"
+                 style={{ borderColor: '#808080 #fff #fff #808080', fontSize: '10px' }}>
+              Ready
+            </div>
+            <div className="border-solid border px-1"
+                 style={{ borderColor: '#808080 #fff #fff #808080', fontSize: '10px', width: '60px' }}>
+              {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
         </div>
-      </div>
-      
-      {/* Window content */}
-      <div className="p-3 h-[calc(100%-28px)] overflow-auto">
-        {children}
       </div>
     </div>
   );
