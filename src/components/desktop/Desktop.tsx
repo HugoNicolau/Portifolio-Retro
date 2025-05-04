@@ -51,6 +51,13 @@ const projects = [
   // Add more projects here
 ];
 
+// Add a type for icon position
+interface IconPosition {
+  id: string;
+  x: number;
+  y: number;
+}
+
 export function Desktop() {
   const {
     windows,
@@ -68,6 +75,32 @@ export function Desktop() {
   const [time, setTime] = useState(new Date());
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
+  
+  // Add state for icon positions and dragging
+  const [iconPositions, setIconPositions] = useState<IconPosition[]>([]);
+  const [draggingIcon, setDraggingIcon] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+
+  // Add this state to Desktop component
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  
+  // Initialize icon positions on first render
+  useEffect(() => {
+    // Create initial positions for all desktop icons
+    const initialPositions: IconPosition[] = [
+      ...projects.map((project, index) => ({
+        id: project.id,
+        x: 20,
+        y: 20 + index * 80 // Stack icons vertically with spacing
+      })),
+      { id: 'computer', x: 20, y: 20 + projects.length * 80 },
+      { id: 'about', x: 20, y: 20 + (projects.length + 1) * 80 },
+      { id: 'display-properties', x: 20, y: 20 + (projects.length + 2) * 80 }
+    ];
+    
+    setIconPositions(initialPositions);
+  }, []); // Empty dependency array means this runs once on component mount
   
   // Update clock
   useEffect(() => {
@@ -120,89 +153,284 @@ export function Desktop() {
     );
   };
 
+  // Add drag handlers for desktop icons
+  const handleIconDragStart = (e: React.MouseEvent, iconId: string) => {
+    e.preventDefault(); // Prevent default browser dragging
+    
+    const position = iconPositions.find(pos => pos.id === iconId);
+    if (!position) return;
+    
+    setDraggingIcon(iconId);
+    
+    // Calculate offset from click position to icon corner
+    setDragOffset({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    });
+  };
+  
+  const snapToGrid = (x: number, y: number, gridSize: number = 20) => {
+    return {
+      x: Math.round(x / gridSize) * gridSize,
+      y: Math.round(y / gridSize) * gridSize
+    };
+  };
+
+  const handleIconDragMove = (e: MouseEvent) => {
+    if (!draggingIcon) return;
+    
+    // Get snapped position
+    const { x, y } = snapToGrid(e.clientX - dragOffset.x, e.clientY - dragOffset.y);
+    
+    // Update position of dragged icon
+    setIconPositions(prev => prev.map(pos => 
+      pos.id === draggingIcon
+        ? { ...pos, x, y }
+        : pos
+    ));
+  };
+  
+  const handleIconDragEnd = () => {
+    setDraggingIcon(null);
+  };
+  
+  // Set up event listeners for icon dragging
+  useEffect(() => {
+    if (draggingIcon) {
+      window.addEventListener('mousemove', handleIconDragMove);
+      window.addEventListener('mouseup', handleIconDragEnd);
+    }
+    
+    return () => {
+      window.removeEventListener('mousemove', handleIconDragMove);
+      window.removeEventListener('mouseup', handleIconDragEnd);
+    };
+  }, [draggingIcon, dragOffset]);
+  
+  // Icon click handler that differentiates between clicks and drags
+  const handleIconClick = (iconId: string, onClick: () => void) => (e: React.MouseEvent) => {
+    // If the mouse moved significantly, treat as drag not click
+    const iconPos = iconPositions.find(p => p.id === iconId);
+    if (!iconPos) return;
+    
+    // Store start position to detect if this is a drag or click
+    const startX = iconPos.x;
+    const startY = iconPos.y;
+    
+    // Start dragging
+    handleIconDragStart(e, iconId);
+    
+    // Create a one-time mouseup handler to check if this was a click
+    const checkIfClick = (e: MouseEvent) => {
+      window.removeEventListener('mouseup', checkIfClick);
+      
+      const endPos = iconPositions.find(p => p.id === iconId);
+      if (!endPos) return;
+      
+      // If position hasn't moved much, consider it a click
+      if (Math.abs(endPos.x - startX) < 5 && Math.abs(endPos.y - startY) < 5) {
+        onClick();
+      }
+    };
+    
+    window.addEventListener('mouseup', checkIfClick);
+  };
+
+  // Add this function to Desktop component
+  const handleDesktopContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setContextMenuPosition({ x: e.clientX, y: e.clientY });
+    setShowContextMenu(true);
+  };
+
+  // Add handler to arrange icons automatically
+  const arrangeIcons = () => {
+    const newPositions = iconPositions.map((pos, index) => ({
+      id: pos.id,
+      x: 20,
+      y: 20 + index * 80
+    }));
+    setIconPositions(newPositions);
+    setShowContextMenu(false);
+  };
+
   return (
     <div 
       className="absolute inset-0 overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: `url(${selectedWallpaper.src})` }}
+      onContextMenu={handleDesktopContextMenu}
     >
       {/* CRT scan effect */}
       <div className="fixed inset-0 pointer-events-none z-50 opacity-5">
         <div className="scanline"></div>
       </div>
       
-      {/* Desktop icons */}
-      <div className="grid grid-cols-6 gap-1 p-1 sm:grid-cols-8 md:p-2">
-        {projects.map(project => (
-          <DesktopIcon
-            key={project.id}
-            name={project.title}
-            icon={<span className="text-3xl">{project.icon}</span>}
-            onClick={() => openWindow(project.id, project.title, project.content)}
-          />
-        ))}
-        
-        <DesktopIcon
-          name="My Computer"
-          icon={<span className="text-3xl">💻</span>}
-          onClick={() => openWindow(
-            'computer',
-            'My Computer',
-            <div>
-              <h2 className="text-xl font-win95 font-bold mb-4">My Computer</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col items-center">
-                  <span className="text-3xl">💿</span>
-                  <span className="text-sm">(C:)</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-3xl">🖨️</span>
-                  <span className="text-sm">Printers</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-3xl">🌐</span>
-                  <span className="text-sm">Network</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <span className="text-3xl">⚙️</span>
-                  <span className="text-sm">Control Panel</span>
-                </div>
-              </div>
+      {/* Replace the grid layout with absolute positioning for icons */}
+      <div className="absolute inset-0">
+        {/* Projects */}
+        {projects.map(project => {
+          const position = iconPositions.find(pos => pos.id === project.id);
+          return position && (
+            <div
+              key={project.id}
+              className="absolute"
+              style={{ left: `${position.x}px`, top: `${position.y}px` }}
+            >
+              <DesktopIcon
+                name={project.title}
+                icon={<span className="text-3xl">{project.icon}</span>}
+                onMouseDown={(e) => handleIconDragStart(e, project.id)}
+                onClick={() => openWindow(project.id, project.title, project.content)}
+                isDragging={draggingIcon === project.id}
+              />
             </div>
-          )}
-        />
+          );
+        })}
         
-        <DesktopIcon
-          name="About Me"
-          icon={<span className="text-3xl">👤</span>}
-          onClick={() => openWindow(
-            'about',
-            'About Me',
-            <div className="font-win95">
-              <h2 className="text-xl font-bold mb-4">About Me</h2>
-              <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
-              <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
-              
-              <div className="retro-outset p-2 mt-4">
-                <h3 className="font-bold mb-2">Skills:</h3>
-                <ul className="list-disc pl-5">
-                  <li>React & TypeScript</li>
-                  <li>UI/UX Design</li>
-                  <li>Frontend Architecture</li>
-                  <li>Responsive Layouts</li>
-                </ul>
-              </div>
-              
-              <button className="retro-button mt-4">Contact Me</button>
+        {/* Computer icon */}
+        {(() => {
+          const position = iconPositions.find(pos => pos.id === 'computer');
+          return position && (
+            <div
+              key="computer"
+              className="absolute"
+              style={{ left: `${position.x}px`, top: `${position.y}px` }}
+            >
+              <DesktopIcon
+                name="My Computer"
+                icon={<span className="text-3xl">💻</span>}
+                onMouseDown={(e) => handleIconDragStart(e, 'computer')}
+                onClick={() => openWindow(
+                  'computer',
+                  'My Computer',
+                  <div>
+                    <h2 className="text-xl font-win95 font-bold mb-4">My Computer</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col items-center">
+                        <span className="text-3xl">💿</span>
+                        <span className="text-sm">(C:)</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-3xl">🖨️</span>
+                        <span className="text-sm">Printers</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-3xl">🌐</span>
+                        <span className="text-sm">Network</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-3xl">⚙️</span>
+                        <span className="text-sm">Control Panel</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                isDragging={draggingIcon === 'computer'}
+              />
             </div>
-          )}
-        />
+          );
+        })()}
+        
+        {/* About Me icon */}
+        {(() => {
+          const position = iconPositions.find(pos => pos.id === 'about');
+          return position && (
+            <div
+              key="about"
+              className="absolute"
+              style={{ left: `${position.x}px`, top: `${position.y}px` }}
+            >
+              <DesktopIcon
+                name="About Me"
+                icon={<span className="text-3xl">👤</span>}
+                onMouseDown={(e) => handleIconDragStart(e, 'about')}
+                onClick={() => openWindow(
+                  'about',
+                  'About Me',
+                  <div className="font-win95">
+                    <h2 className="text-xl font-bold mb-4">About Me</h2>
+                    <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
+                    <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
+                    
+                    <div className="retro-outset p-2 mt-4">
+                      <h3 className="font-bold mb-2">Skills:</h3>
+                      <ul className="list-disc pl-5">
+                        <li>React & TypeScript</li>
+                        <li>UI/UX Design</li>
+                        <li>Frontend Architecture</li>
+                        <li>Responsive Layouts</li>
+                      </ul>
+                    </div>
+                    
+                    <button className="retro-button mt-4">Contact Me</button>
+                  </div>
+                )}
+                isDragging={draggingIcon === 'about'}
+              />
+            </div>
+          );
+        })()}
 
-        <DesktopIcon
-          name="Display Properties"
-          icon={<span className="text-3xl">🖼️</span>}
-          onClick={openDisplayProperties}
-        />
+        {/* Display Properties icon */}
+        {(() => {
+          const position = iconPositions.find(pos => pos.id === 'display-properties');
+          return position && (
+            <div
+              key="display-properties"
+              className="absolute"
+              style={{ left: `${position.x}px`, top: `${position.y}px` }}
+            >
+              <DesktopIcon
+                name="Display Properties"
+                icon={<span className="text-3xl">🖼️</span>}
+                onMouseDown={(e) => handleIconDragStart(e, 'display-properties')}
+                onClick={openDisplayProperties}
+                isDragging={draggingIcon === 'display-properties'}
+              />
+            </div>
+          );
+        })()}
       </div>
+      
+      {/* Context Menu */}
+      {showContextMenu && (
+        <div 
+          className="fixed z-50 bg-win95-gray border-2 border-win95-shadow shadow-md py-1 w-48"
+          style={{ 
+            left: contextMenuPosition.x, 
+            top: contextMenuPosition.y,
+            boxShadow: '2px 2px 5px rgba(0,0,0,0.3)'
+          }}
+        >
+          <div 
+            className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
+            onClick={arrangeIcons}
+          >
+            Arrange Icons
+          </div>
+          <div 
+            className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
+            onClick={() => setShowContextMenu(false)}
+          >
+            Refresh
+          </div>
+          <div className="border-t border-win95-shadow my-1"></div>
+          <div 
+            className="px-4 py-1 hover:bg-win95-blue hover:text-white cursor-pointer"
+            onClick={() => setShowContextMenu(false)}
+          >
+            Properties
+          </div>
+        </div>
+      )}
+
+      {/* Click handler to close context menu when clicking elsewhere */}
+      {showContextMenu && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setShowContextMenu(false)} 
+        />
+      )}
       
       {/* Windows */}
       {visibleWindows.map((window) => (
