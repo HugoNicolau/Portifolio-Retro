@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "MS Sans Serif";
+  src: url("/fonts/ms-sans-serif.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Windows 95 Cores e Estilos */
+.font-win95 {
+  font-family: "MS Sans Serif", "Segoe UI", Tahoma, sans-serif;
+  font-size: 12px;
+}
+
+.bg-win95-gray {
+  background-color: #c0c0c0;
+}
+
+.bg-win95-gray-dark {
+  background-color: #808080;
+}
+
+.bg-win95-gray-light {
+  background-color: #d0d0d0;
+}
+
+.bg-win95-blue {
+  background-color: #000080;
+}
+
+.bg-win95-teal {
+  background-color: #008080;
+}
+
+.bg-win95-red {
+  background-color: #ff0000;
+}
+
+.bg-win95-green {
+  background-color: #00ff00;
+}
+
+.bg-win95-blue {
+  background-color: #0000ff;
+}
+
+.bg-win95-yellow {
+  background-color: #ffff00;
+}
+
+.text-win95-gray-light {
+  color: #d0d0d0;
+}
+
+/* Bordas */
+.border-win95 {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+.border-win95-inset {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* Sombras */
+.shadow-win95 {
+  box-shadow: 2px 2px 0 #808080;
+}
+
+/* Cursor personalizado estilo Windows 95 */
+.win95-cursor {
+  cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAABGdBTUEAALGPC/xhBQAAAFRJREFUGJV1jLEOACAIQu3//5nYWRMHE08HwQGe5OfKJgMTMCUDM+S5OWTxOiboGDz9x9TbKxKGzn0HCi0PffJ3aRj3YQfagwLxGz5avd/S1WrpBy9FE1AKHgMQAAAAAElFTkSuQmCC"),
+    auto;
+}
