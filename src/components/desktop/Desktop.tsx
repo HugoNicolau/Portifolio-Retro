@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useWindows } from '../../hooks/useWindows';
 import { DesktopIcon } from './DesktopIcon';
-import { Taskbar } from './Taskbar';
+// import { Taskbar } from './Taskbar';
 import { Window } from '../windows/Window';
 import wallpaper1 from '../../assets/wallpapers/wallpaper1.jpg';
 import wallpaper2 from '../../assets/wallpapers/wallpaper2.jpg';
 import wallpaper3 from '../../assets/wallpapers/wallpaper.jpg'; // Add your wallpaper image
+import ResumeFile from '../../assets/resume/Resume-HugoNicolau.pdf';
 
 const wallpapers = [
   { id: 'default', name: 'Win95 Teal', src: wallpaper1 },
@@ -63,7 +64,7 @@ export function Desktop() {
     windows,
     visibleWindows,
     activeWindowId,
-    minimizedWindows,
+    // minimizedWindows,
     openWindow,
     closeWindow,
     minimizeWindow,
@@ -271,9 +272,9 @@ export function Desktop() {
             </div>
           ))}
         </div>
-        <div className="flex justify-end gap-2">
+        {/* <div className="flex justify-end gap-2">
           <button className="retro-button" onClick={() => closeWindow('display-properties')}>Close</button>
-        </div>
+        </div> */}
       </div>
     );
   };
@@ -432,13 +433,13 @@ export function Desktop() {
 
     // Use snapToGrid to get final position
     const snappedPosition = snapToGrid(draggedIcon.x, draggedIcon.y, GRID_CELL_WIDTH);
-    
+
     // Get grid cell from snapped position
     const col = Math.floor(snappedPosition.x / GRID_CELL_WIDTH);
     const row = Math.floor(snappedPosition.y / GRID_CELL_HEIGHT);
 
     // Check boundaries
-    const isWithinBounds = 
+    const isWithinBounds =
       col >= Math.ceil(EDGE_MARGIN / GRID_CELL_WIDTH) &&
       row >= Math.ceil(EDGE_MARGIN / GRID_CELL_HEIGHT) &&
       col < gridDimensions.cols - Math.ceil(EDGE_MARGIN / GRID_CELL_WIDTH) &&
@@ -449,19 +450,19 @@ export function Desktop() {
 
     // Check if position is valid: within bounds AND either unoccupied OR occupied by this icon
     const isValidPos = isWithinBounds && (!occupiedBy || occupiedBy === draggingIcon);
-    
+
     if (!isValidPos) {
       // Position is invalid - try to find a nearby valid position
       // First, create position objects for all icons
       const allPositions = iconPositions.filter(pos => pos.id !== draggingIcon);
-      
+
       // Create a position object for the snapped position
       const potentialPosition: IconPosition = {
         id: draggingIcon,
         x: snappedPosition.x,
         y: snappedPosition.y
       };
-      
+
       // If the position is out of bounds, revert to original position
       if (!isWithinBounds) {
         setIconPositions(prev => prev.map(pos =>
@@ -470,26 +471,26 @@ export function Desktop() {
       } else {
         // Try to find a nearby valid position using our spiral search function
         const { x, y } = findNearestValidPosition(potentialPosition, allPositions);
-        
+
         // Convert back to grid cell
         const newCol = Math.floor(x / GRID_CELL_WIDTH);
         const newRow = Math.floor(y / GRID_CELL_HEIGHT);
         const newCellKey = `${newCol},${newRow}`;
-        
+
         // Update grid
         const newGrid = { ...grid };
-        
+
         // Remove icon from its previous cell
         Object.keys(newGrid).forEach(key => {
           if (newGrid[key] === draggingIcon) {
             delete newGrid[key];
           }
         });
-        
+
         // Place in new cell
         newGrid[newCellKey] = draggingIcon;
         setGrid(newGrid);
-        
+
         // Update position
         setIconPositions(prev => prev.map(pos =>
           pos.id === draggingIcon ? { ...pos, x, y } : pos
@@ -498,24 +499,24 @@ export function Desktop() {
     } else {
       // Position is valid - update grid and position
       const newGrid = { ...grid };
-      
+
       // First, remove the icon from its current cell
       Object.keys(newGrid).forEach(key => {
         if (newGrid[key] === draggingIcon) {
           delete newGrid[key];
         }
       });
-      
+
       // Then, place it in the new cell
       newGrid[cellKey] = draggingIcon;
       setGrid(newGrid);
-      
+
       // Use the snapped position for visual consistency
       setIconPositions(prev => prev.map(pos =>
         pos.id === draggingIcon ? { ...pos, x: snappedPosition.x, y: snappedPosition.y } : pos
       ));
     }
-    
+
     setDraggingIcon(null);
     setDragStartPosition(null);
   };
@@ -730,9 +731,9 @@ export function Desktop() {
         <div className="relative w-full h-full overflow-hidden border-8 border-[#333] rounded-md monitor-screen"
           style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }}>
           {/* Screen content - this div contains both desktop and taskbar */}
-          <div 
+          <div
             className="desktop-background w-screen h-screen"
-            style={{ 
+            style={{
               userSelect: 'none', /* Prevents text selection */
               outline: 'none',    /* Removes focus outline */
             }}
@@ -834,23 +835,94 @@ export function Desktop() {
                           onMouseDown={(e) => handleIconDragStart(e, 'about')}
                           onClick={() => openWindow(
                             'about',
-                            'About Me',
-                            <div className="font-win95 text-black">
-                              <h2 className="text-xl font-bold mb-4">About Me</h2>
-                              <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
-                              <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
+                            'About Me - Hugo Nicolau',
+                            <div className="font-win95 text-black p-3 overflow-auto">
+                              <h2 className="text-xl font-bold mb-4">Hugo Nicolau</h2>
+                              <h3 className="text-base mb-2">Full Stack Engineer</h3>
 
-                              <div className="retro-outset p-2 mt-4">
-                                <h3 className="font-bold mb-2">Skills:</h3>
-                                <ul className="list-disc pl-5">
-                                  <li>React & TypeScript</li>
-                                  <li>UI/UX Design</li>
-                                  <li>Frontend Architecture</li>
-                                  <li>Responsive Layouts</li>
+                              <div className="retro-inset p-3 mb-4">
+                                <p className="mb-3">
+                                  Full-stack developer passionate about technology. I began my journey in 2016 with Arduino and, since 2021, have specialized in web development focused on TypeScript, JavaScript, React.js, Node.js, Nest.js, and RESTful APIs.
+                                </p>
+                                <p>
+                                  I have experience building intuitive and responsive interfaces, as well as scalable and robust backends. I value communication and teamwork, transforming ideas into efficient and functional solutions.
+                                </p>
+                              </div>
+
+                              <div className="mb-4">
+                                <h3 className="font-bold mb-2 border-b border-gray-400">Key Skills</h3>
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div className="retro-outset p-2">
+                                    <div className="font-bold mb-1">💻 Languages</div>
+                                    <div>TypeScript, JavaScript, Java,  C++</div>
+                                  </div>
+                                  <div className="retro-outset p-2">
+                                    <div className="font-bold mb-1">🔨 Frameworks</div>
+                                    <div>React.js, Vite, Node.js, Nest.js, Express.js</div>
+                                  </div>
+                                  <div className="retro-outset p-2">
+                                    <div className="font-bold mb-1">🗄️ Databases</div>
+                                    <div>PostgreSQL, MongoDB, TypeORM, Prisma</div>
+                                  </div>
+                                  <div className="retro-outset p-2">
+                                    <div className="font-bold mb-1">⚙️ Infrastructure & Tools</div>
+                                    <div>Docker, AWS, Git, GitHub</div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="mb-4">
+                                <h3 className="font-bold mb-2 border-b border-gray-400">Experience</h3>
+                                <div className="retro-outset p-2 mb-2">
+                                  <div className="font-bold">TeamSoft Technology and Systems</div>
+                                  <div className="italic mb-1">Full Stack Developer – Apr 2024 – Present</div>
+                                  <ul className="list-disc pl-5 text-sm">
+                                    <li>Database query optimization</li>
+                                    <li>Development of scalable applications</li>
+                                    <li>Worked with React, Node.js, Nest.js, Prisma</li>
+                                  </ul>
+                                </div>
+
+                                <div className="retro-outset p-2">
+                                  <div className="font-bold">Freelancer</div>
+                                  <div className="italic mb-1">Full Stack Developer – Mar 2022 – Present</div>
+                                  <ul className="list-disc pl-5 text-sm">
+                                    <li>Built custom features using Next.js, NestJS, and TypeORM</li>
+                                    <li>Designed optimized database queries tailored to client needs</li>
+                                  </ul>
+                                </div>
+                              </div>
+
+                              <div className="mb-4">
+                                <h3 className="font-bold mb-2 border-b border-gray-400">Certifications</h3>
+                                <ul className="pl-2 list-disc list-inside">
+                                  <li>✅ Full Stack Web Development Certificate</li>
+                                  <li>🌐 EF SET English Certificate 81/100 (C2 Proficient)</li>
+                                  <li>🎓 Harvard CS50 – Introduction to Computer Science</li>
                                 </ul>
                               </div>
 
-                              <button className="retro-button mt-4">Contact Me</button>
+                              <div className="retro-outset p-2 mb-4">
+                                <h3 className="font-bold mb-1">Contact</h3>
+                                <div className="grid grid-cols-1 gap-1 text-sm">
+                                  <a href="mailto:nicolau.hugogiles@gmail.com" className="flex items-center hover:underline">
+                                    <span className="mr-2">📧</span>
+                                    <span>nicolau.hugogiles@gmail.com</span>
+                                  </a>
+                                  <a href="https://linkedin.com/in/hugo-nicolau" target="_blank" className="flex items-center hover:underline">
+                                    <span className="mr-2">🔗</span>
+                                    <span>linkedin.com/in/hugo-nicolau</span>
+                                  </a>
+                                  <a href="https://github.com/HugoNicolau" target="_blank" className="flex items-center hover:underline">
+                                    <span className="mr-2">🐙</span>
+                                    <span>github.com/HugoNicolau</span>
+                                  </a>
+                                </div>
+                              </div>
+
+                              <a href={ResumeFile} download className="retro-button">
+                                Download CV
+                              </a>
                             </div>
                           )}
                           isDragging={draggingIcon === 'about'}
