@@ -9,8 +9,8 @@ import wallpaper3 from '../../assets/wallpapers/wallpaper.jpg'; // Add your wall
 import ResumeFile from '../../assets/resume/Resume-HugoNicolau.pdf';
 
 const wallpapers = [
-  { id: 'default', name: 'Win95 Teal', src: wallpaper1 },
   { id: 'retro', name: 'Retro Wallpaper', src: wallpaper2 },
+  { id: 'default', name: 'Win95 Teal', src: wallpaper1 },
   { id: 'hills', name: 'Rolling Hills', src: wallpaper3 },
 ];
 
@@ -23,12 +23,57 @@ const projects = [
     content: (
       <div className='text-black'>
         <h2 className="text-xl font-bold mb-4">Portfolio Site</h2>
-        <p>This is the site you're currently viewing! A retro-styled portfolio inspired by Windows 95.</p>
-        <ul className="list-disc pl-5 mt-2">
-          <li>Built with React + Vite</li>
-          <li>Styled with Tailwind CSS</li>
-          <li>Pixelated retro aesthetics</li>
-        </ul>
+        <p className="mb-3">This retro Windows 95-inspired portfolio site demonstrates my frontend skills and passion for creative UI development.</p>
+
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Key Features:</h3>
+          <ul className="list-disc pl-5">
+            <li>Authentic Windows 95 UI with pixel-perfect details</li>
+            <li>Fully functional window management system</li>
+            <li>Draggable windows with maximize, minimize, and close</li>
+            <li>Interactive desktop with draggable icons and grid snapping</li>
+            <li>Working Start menu and context menus</li>
+            <li>CRT monitor effect with screen reflection and scanlines</li>
+          </ul>
+        </div>
+
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technologies Used:</h3>
+          <div className="flex flex-wrap">
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>React</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>TypeScript</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Tailwind CSS</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Vite</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>React Icons</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Custom Hooks</span>
+          </div>
+        </div>
+
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technical Highlights:</h3>
+          <ul className="list-disc pl-5">
+            <li>Custom window management system with stacking context</li>
+            <li>Grid-based icon positioning with collision detection</li>
+            <li>State management for multiple application windows</li>
+            <li>Responsive design that works on different screen sizes</li>
+            <li>Authentic retro styling with CSS</li>
+          </ul>
+        </div>
+
+        <div className="flex mt-4 gap-2">
+          <a
+            href="https://github.com/HugoNicolau/Portifolio-Retro"
+            target="_blank"
+            className="retro-button flex items-center"
+          >
+            <span className="mr-1">🐙</span>
+            View Source
+          </a>
+          <button className="retro-button flex items-center">
+            <span className="mr-1">📝</span>
+            Development Notes
+          </button>
+        </div>
       </div>
     )
   },
@@ -50,6 +95,266 @@ const projects = [
     )
   },
   // Add more projects here
+  {
+    id: 'langaimage',
+    title: 'LangAImage',
+    icon: '🤖',
+    content: (
+      <div className='text-black'>
+        <h2 className="text-xl font-bold mb-4">LangAImage</h2>
+        <p className="mb-3">A web application that combines language learning with image recognition AI, creating a more immersive and interactive way to learn vocabulary in new languages.</p>
+        
+        <div className="retro-inset p-3 mb-3">
+          <h3 className="font-bold mb-2">Key Features:</h3>
+          <ul className="list-disc pl-5">
+            <li>AI-powered image recognition to identify objects in user-uploaded images</li>
+            <li>Multi-language support for vocabulary learning</li>
+            <li>Interactive flashcard system with image associations</li>
+            <li>Progress tracking across learning sessions</li>
+            <li>User authentication and saved history</li>
+          </ul>
+        </div>
+        
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technologies Used:</h3>
+          <div className="flex flex-wrap">
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>React</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>TypeScript</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Node.js</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Express</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>MongoDB</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>TensorFlow.js</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Google Cloud Vision API</span>
+          </div>
+        </div>
+        
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technical Highlights:</h3>
+          <ul className="list-disc pl-5">
+            <li>Integration with machine learning models for image recognition</li>
+            <li>RESTful API design for language translation services</li>
+            <li>Responsive front-end with drag-and-drop file uploads</li>
+            <li>Authentication system with JWT tokens</li>
+            <li>Progressive Web App capabilities for offline learning</li>
+          </ul>
+        </div>
+        
+        <div className="flex mt-4 gap-2">
+          <a 
+            href="https://github.com/HugoNicolau/LangAImage" 
+            target="_blank" 
+            className="retro-button flex items-center"
+          >
+            <span className="mr-1">🐙</span>
+            View Source
+          </a>
+          <a 
+            href="https://langaimage.vercel.app" 
+            target="_blank" 
+            className="retro-button flex items-center"
+          >
+            <span className="mr-1">🌐</span>
+            Live Demo
+          </a>
+        </div>
+      </div>
+    )
+  },
+  {
+    id: 'forca-springboot',
+    title: 'Hangman Game',
+    icon: '🎮',
+    content: (
+      <div className='text-black'>
+        <h2 className="text-xl font-bold mb-4">Hangman Game (Forca)</h2>
+        <p className="mb-3">A classic Hangman game implementation with a modern tech stack, demonstrating my backend development skills with Spring Boot and clean architecture principles.</p>
+        
+        <div className="retro-inset p-3 mb-3">
+          <h3 className="font-bold mb-2">Key Features:</h3>
+          <ul className="list-disc pl-5">
+            <li>RESTful API for the Hangman game logic</li>
+            <li>User authentication and game session management</li>
+            <li>Word dictionary with multiple categories</li>
+            <li>Score tracking and leaderboard functionality</li>
+            <li>Comprehensive game state management</li>
+          </ul>
+        </div>
+        
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technologies Used:</h3>
+          <div className="flex flex-wrap">
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Java</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Spring Boot</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Spring Data JPA</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Maven</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>JUnit</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>PostgreSQL</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>RESTful API</span>
+          </div>
+        </div>
+        
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technical Highlights:</h3>
+          <ul className="list-disc pl-5">
+            <li>MVC architecture with clean separation of concerns</li>
+            <li>Exception handling and custom error responses</li>
+            <li>Unit and integration testing with JUnit</li>
+            <li>Database schema design with entity relationships</li>
+            <li>API documentation with OpenAPI/Swagger</li>
+          </ul>
+        </div>
+        
+        <div className="flex mt-4 gap-2">
+          <a 
+            href="https://github.com/HugoNicolau/Forca-SpringBoot" 
+            target="_blank" 
+            className="retro-button flex items-center"
+          >
+            <span className="mr-1">🐙</span>
+            View Source
+          </a>
+          <a 
+            href="#" /* Replace with actual demo URL if available */
+            className="retro-button flex items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              alert('Demo coming soon!');
+            }}
+          >
+            <span className="mr-1">🎲</span>
+            Play Game
+          </a>
+        </div>
+      </div>
+    )
+  },
+  {
+    id: 'bubbleman',
+    title: 'BubbleMan',
+    icon: '🫧',
+    content: (
+      <div className='text-black'>
+        <h2 className="text-xl font-bold mb-4">BubbleMan</h2>
+        <p className="mb-3">A creative and addictive bubble-popping game built with modern web technologies. This project demonstrates my game development skills and understanding of interactive web applications.</p>
+        
+        <div className="retro-inset p-3 mb-3">
+          <h3 className="font-bold mb-2">Key Features:</h3>
+          <ul className="list-disc pl-5">
+            <li>Engaging gameplay with increasing difficulty levels</li>
+            <li>Dynamic bubble generation and physics-based movement</li>
+            <li>Score tracking and high score persistence</li>
+            <li>Smooth animations and interactive elements</li>
+            <li>Responsive design that works across devices</li>
+          </ul>
+        </div>
+        
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technologies Used:</h3>
+          <div className="flex flex-wrap">
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>JavaScript</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>HTML5 Canvas</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>CSS3</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Web Audio API</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>LocalStorage</span>
+          </div>
+        </div>
+        
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technical Highlights:</h3>
+          <ul className="list-disc pl-5">
+            <li>Game loop architecture with optimized rendering</li>
+            <li>Collision detection algorithm for bubble interactions</li>
+            <li>Particle effects system for visual feedback</li>
+            <li>Object-oriented design for game entities</li>
+            <li>Event-driven architecture for user interactions</li>
+          </ul>
+        </div>
+        
+        <div className="flex mt-4 gap-2">
+          <a 
+            href="https://github.com/HugoNicolau/bubbleman" 
+            target="_blank" 
+            className="retro-button flex items-center"
+          >
+            <span className="mr-1">🐙</span>
+            View Source
+          </a>
+          <a 
+            href="https://hugonicolau.github.io/bubbleman/" 
+            target="_blank" 
+            className="retro-button flex items-center"
+          >
+            <span className="mr-1">🎮</span>
+            Play Game
+          </a>
+        </div>
+      </div>
+    )
+  },
+  {
+    id: 'modos-extension',
+    title: 'Modos Extension',
+    icon: '🧩',
+    content: (
+      <div className='text-black'>
+        <h2 className="text-xl font-bold mb-4">Modos Chrome Extension</h2>
+        <p className="mb-3">A productivity-enhancing browser extension that helps users manage and organize their browser workflow through customizable modes for different contexts and activities.</p>
+        
+        <div className="retro-inset p-3 mb-3">
+          <h3 className="font-bold mb-2">Key Features:</h3>
+          <ul className="list-disc pl-5">
+            <li>Context-based workspace management for browsing</li>
+            <li>Quick switching between different "modes" of browsing</li>
+            <li>Tab organization and session management</li>
+            <li>Customizable interface and preferences</li>
+            <li>Productivity tracking and insights</li>
+          </ul>
+        </div>
+        
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technologies Used:</h3>
+          <div className="flex flex-wrap">
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>JavaScript</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Chrome Extension API</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>HTML5</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>CSS3</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Chrome Storage API</span>
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 mb-2" style={{ marginRight: '6px' }}>Manifest V3</span>
+          </div>
+        </div>
+        
+        <div className="retro-outset p-3 mb-3">
+          <h3 className="font-bold mb-2">Technical Highlights:</h3>
+          <ul className="list-disc pl-5">
+            <li>Browser extension architecture with background and content scripts</li>
+            <li>Browser API integration for tab and window management</li>
+            <li>Persistent storage implementation for user preferences</li>
+            <li>Event-driven programming for browser interactions</li>
+            <li>User-friendly settings panel and configuration options</li>
+          </ul>
+        </div>
+        
+        <div className="flex mt-4 gap-2">
+          <a 
+            href="https://github.com/HugoNicolau/Modos-chrome-extension" 
+            target="_blank" 
+            className="retro-button flex items-center"
+          >
+            <span className="mr-1">🐙</span>
+            View Source
+          </a>
+          <a 
+            href="https://chrome.google.com/webstore/search/modos%20extension" 
+            target="_blank" 
+            className="retro-button flex items-center"
+          >
+            <span className="mr-1">🌐</span>
+            Chrome Store
+          </a>
+        </div>
+      </div>
+    )
+  },
 ];
 
 // Add a type for icon position
