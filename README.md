@@ -55,10 +55,10 @@ Despite being inspired by an operating system from the 1990s, the portfolio is f
 
 ```bash
 # Clone the repository
-git clone https://github.com/HugoNicolau/portfolio-retro.git
+git clone https://github.com/HugoNicolau/Portifolio-Retro.git
 
 # Navigate to the project directory
-cd portfolio-retro
+cd Portifolio-Retro
 
 # Install dependencies
 npm install
