@@ -78,24 +78,6 @@ const projects = [
     )
   },
   {
-    id: 'project2',
-    title: 'Todo App',
-    icon: '📝',
-    content: (
-      <div className='text-black'>
-        <h2 className="text-xl font-bold mb-4">Todo App</h2>
-        <p>A simple task management application with retro UI.</p>
-        <ul className="list-disc pl-5 mt-2">
-          <li>React state management</li>
-          <li>Local storage persistence</li>
-          <li>Drag and drop functionality</li>
-        </ul>
-        <button className="bg-retro-accent text-white px-3 py-1 mt-4">View Demo</button>
-      </div>
-    )
-  },
-  // Add more projects here
-  {
     id: 'langaimage',
     title: 'LangAImage',
     icon: '🤖',
@@ -1364,25 +1346,97 @@ export function Desktop() {
                         <div
                           className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
                           onClick={() => {
+                            // Open the same About Me window as the desktop icon
                             openWindow(
                               'about',
-                              'About Me',
-                              <div className="font-win95">
-                                <h2 className="text-xl font-bold mb-4">About Me</h2>
-                                <p className="mb-2">Hi there! I'm a web developer passionate about creating engaging user interfaces.</p>
-                                <p className="mb-2">This portfolio showcases my love for retro computing aesthetics combined with modern web technologies.</p>
+                              'About Me - Hugo Nicolau',
+                              <div className="font-win95 text-black p-3 overflow-auto">
+                                <h2 className="text-xl font-bold mb-4">Hugo Nicolau</h2>
+                                <h3 className="text-base mb-2">Full Stack Engineer</h3>
 
-                                <div className="retro-outset p-2 mt-4">
-                                  <h3 className="font-bold mb-2">Skills:</h3>
-                                  <ul className="list-disc pl-5">
-                                    <li>React & TypeScript</li>
-                                    <li>UI/UX Design</li>
-                                    <li>Frontend Architecture</li>
-                                    <li>Responsive Layouts</li>
+                                <div className="retro-inset p-3 mb-4">
+                                  <p className="mb-3">
+                                    Full-stack developer passionate about technology. I began my journey in 2016 with Arduino and, since 2021, have specialized in web development focused on TypeScript, JavaScript, React.js, Node.js, Nest.js, and RESTful APIs.
+                                  </p>
+                                  <p>
+                                    I have experience building intuitive and responsive interfaces, as well as scalable and robust backends. I value communication and teamwork, transforming ideas into efficient and functional solutions.
+                                  </p>
+                                </div>
+
+                                <div className="mb-4">
+                                  <h3 className="font-bold mb-2 border-b border-gray-400">Key Skills</h3>
+                                  <div className="grid grid-cols-2 gap-2">
+                                    <div className="retro-outset p-2">
+                                      <div className="font-bold mb-1">💻 Languages</div>
+                                      <div>TypeScript, JavaScript, Java,  C++</div>
+                                    </div>
+                                    <div className="retro-outset p-2">
+                                      <div className="font-bold mb-1">🔨 Frameworks</div>
+                                      <div>React.js, Vite, Node.js, Nest.js, Express.js</div>
+                                    </div>
+                                    <div className="retro-outset p-2">
+                                      <div className="font-bold mb-1">🗄️ Databases</div>
+                                      <div>PostgreSQL, MongoDB, TypeORM, Prisma</div>
+                                    </div>
+                                    <div className="retro-outset p-2">
+                                      <div className="font-bold mb-1">⚙️ Infrastructure & Tools</div>
+                                      <div>Docker, AWS, Git, GitHub</div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="mb-4">
+                                  <h3 className="font-bold mb-2 border-b border-gray-400">Experience</h3>
+                                  <div className="retro-outset p-2 mb-2">
+                                    <div className="font-bold">TeamSoft Technology and Systems</div>
+                                    <div className="italic mb-1">Full Stack Developer – Apr 2024 – Present</div>
+                                    <ul className="list-disc pl-5 text-sm">
+                                      <li>Database query optimization</li>
+                                      <li>Development of scalable applications</li>
+                                      <li>Worked with React, Node.js, Nest.js, Prisma</li>
+                                    </ul>
+                                  </div>
+
+                                  <div className="retro-outset p-2">
+                                    <div className="font-bold">Freelancer</div>
+                                    <div className="italic mb-1">Full Stack Developer – Mar 2022 – Present</div>
+                                    <ul className="list-disc pl-5 text-sm">
+                                      <li>Built custom features using Next.js, NestJS, and TypeORM</li>
+                                      <li>Designed optimized database queries tailored to client needs</li>
+                                    </ul>
+                                  </div>
+                                </div>
+
+                                <div className="mb-4">
+                                  <h3 className="font-bold mb-2 border-b border-gray-400">Certifications</h3>
+                                  <ul className="pl-2 list-disc list-inside">
+                                    <li>✅ Full Stack Web Development Certificate</li>
+                                    <li>🌐 EF SET English Certificate 81/100 (C2 Proficient)</li>
+                                    <li>🎓 Harvard CS50 – Introduction to Computer Science</li>
                                   </ul>
                                 </div>
 
-                                <button className="retro-button mt-4">Contact Me</button>
+                                <div className="retro-outset p-2 mb-4">
+                                  <h3 className="font-bold mb-1">Contact</h3>
+                                  <div className="grid grid-cols-1 gap-1 text-sm">
+                                    <a href="mailto:nicolau.hugogiles@gmail.com" className="flex items-center hover:underline">
+                                      <span className="mr-2">📧</span>
+                                      <span>nicolau.hugogiles@gmail.com</span>
+                                    </a>
+                                    <a href="https://linkedin.com/in/hugo-nicolau" target="_blank" className="flex items-center hover:underline">
+                                      <span className="mr-2">🔗</span>
+                                      <span>linkedin.com/in/hugo-nicolau</span>
+                                    </a>
+                                    <a href="https://github.com/HugoNicolau" target="_blank" className="flex items-center hover:underline">
+                                      <span className="mr-2">🐙</span>
+                                      <span>github.com/HugoNicolau</span>
+                                    </a>
+                                  </div>
+                                </div>
+
+                                <a href={ResumeFile} download className="retro-button">
+                                  Download CV
+                                </a>
                               </div>
                             );
                             setShowStartMenu(false);
@@ -1392,87 +1446,73 @@ export function Desktop() {
                           <span>About Me</span>
                         </div>
 
+                        {/* Skip the Projects entry as it seems fine */}
+
+                        {/* Update Resume entry to directly download CV */}
                         <div
                           className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
                           onClick={() => {
-                            openWindow(
-                              'projects',
-                              'My Projects',
-                              <div className="font-win95 p-2 text-black">
-                                <h2 className="text-xl font-bold mb-4">My Projects</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  {projects.map(project => (
-                                    <div key={project.id} className="retro-outset p-2">
-                                      <div className="flex items-center mb-2">
-                                        <span className="text-2xl mr-2">{project.icon}</span>
-                                        <h3 className="font-bold">{project.title}</h3>
-                                      </div>
-                                      <p className="text-sm mb-2">Project description here</p>
-                                      <button className="retro-button text-xs">View Details</button>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            );
-                            setShowStartMenu(false);
-                          }}
-                        >
-                          <span className="mr-2">📂</span>
-                          <span>My Projects</span>
-                        </div>
-
-                        <div
-                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                          onClick={() => {
-                            openWindow(
-                              'resume',
-                              'Resume',
-                              <div className="font-win95 p-2">
-                                <h2 className="text-xl font-bold mb-4">Resume</h2>
-                                <div className="retro-outset p-3">
-                                  <h3 className="font-bold">Experience</h3>
-                                  <ul className="list-disc pl-5 mt-1 mb-3">
-                                    <li>Web Developer, Company ABC (2022-Present)</li>
-                                    <li>Frontend Intern, XYZ Corp (2020-2022)</li>
-                                  </ul>
-
-                                  <h3 className="font-bold">Education</h3>
-                                  <ul className="list-disc pl-5 mt-1 mb-3">
-                                    <li>B.S. Computer Science, University (2020)</li>
-                                  </ul>
-
-                                  <button className="retro-button mt-2">Download PDF</button>
-                                </div>
-                              </div>
-                            );
+                            // Create a download link for the resume and trigger it
+                            const link = document.createElement('a');
+                            link.href = ResumeFile;
+                            link.download = 'Hugo_Nicolau_Resume.pdf';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
                             setShowStartMenu(false);
                           }}
                         >
                           <span className="mr-2">📝</span>
-                          <span>Resume</span>
+                          <span>Download Resume</span>
                         </div>
 
+                        {/* Update Contact entry with your actual contact info */}
                         <div
                           className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
                           onClick={() => {
                             openWindow(
                               'contact',
-                              'Contact',
-                              <div className="font-win95 p-2">
+                              'Contact Me',
+                              <div className="font-win95 p-4 text-black">
                                 <h2 className="text-xl font-bold mb-4">Contact Me</h2>
                                 <div className="retro-outset p-3">
-                                  <div className="flex items-center mb-2">
-                                    <span className="mr-2">📧</span>
-                                    <span>email@example.com</span>
-                                  </div>
-                                  <div className="flex items-center mb-2">
-                                    <span className="mr-2">🔗</span>
-                                    <span>linkedin.com/in/username</span>
-                                  </div>
-                                  <div className="flex items-center mb-2">
-                                    <span className="mr-2">🐙</span>
-                                    <span>github.com/username</span>
-                                  </div>
+                                  <a href="mailto:nicolau.hugogiles@gmail.com" className="flex items-center mb-3 hover:underline">
+                                    <span className="mr-2 text-xl">📧</span>
+                                    <span>nicolau.hugogiles@gmail.com</span>
+                                  </a>
+                                  <a href="https://linkedin.com/in/hugo-nicolau" target="_blank" className="flex items-center mb-3 hover:underline">
+                                    <span className="mr-2 text-xl">🔗</span>
+                                    <span>linkedin.com/in/hugo-nicolau</span>
+                                  </a>
+                                  <a href="https://github.com/HugoNicolau" target="_blank" className="flex items-center mb-3 hover:underline">
+                                    <span className="mr-2 text-xl">🐙</span>
+                                    <span>github.com/HugoNicolau</span>
+                                  </a>
+                                  <a href="tel:+5524981160258" className="flex items-center hover:underline">
+                                    <span className="mr-2 text-xl">📱</span>
+                                    <span>+55 24 98116-0258</span>
+                                  </a>
+                                </div>
+                                
+                                <div className="mt-4 retro-outset p-3">
+                                  <h3 className="font-bold mb-2">Send me a message</h3>
+                                  <form className="space-y-2">
+                                    <div className="flex flex-col">
+                                      <label className="mb-1">Your Name:</label>
+                                      <input type="text" className="retro-inset px-2 py-1" />
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <label className="mb-1">Email:</label>
+                                      <input type="email" className="retro-inset px-2 py-1" />
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <label className="mb-1">Message:</label>
+                                      <textarea className="retro-inset px-2 py-1 h-24 resize-none"></textarea>
+                                    </div>
+                                    <button type="button" className="retro-button" onClick={() => alert('Message functionality coming soon!')}>
+                                      Send Message
+                                    </button>
+                                  </form>
                                 </div>
                               </div>
                             );
@@ -1480,20 +1520,7 @@ export function Desktop() {
                           }}
                         >
                           <span className="mr-2">📱</span>
-                          <span>Contact</span>
-                        </div>
-
-                        <div className="border-t border-gray-400 border-b border-white my-1"></div>
-
-                        <div
-                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                          onClick={() => {
-                            openDisplayProperties();
-                            setShowStartMenu(false);
-                          }}
-                        >
-                          <span className="mr-2">🖼️</span>
-                          <span>Select Wallpaper</span>
+                          <span>Contact Me</span>
                         </div>
 
                         <div
@@ -1504,7 +1531,7 @@ export function Desktop() {
                               'Settings',
                               <div className="font-win95 p-2">
                                 <h2 className="text-xl font-bold mb-4">Settings</h2>
-                                <p>System settings would go here in a real OS.</p>
+                                <p>Easter egg: <a href='https://www.youtube.com/@nicolaub' target="_blank"> My Youtube Channel</a>.</p>
                               </div>
                             );
                             setShowStartMenu(false);
@@ -1512,32 +1539,6 @@ export function Desktop() {
                         >
                           <span className="mr-2">⚙️</span>
                           <span>Settings</span>
-                        </div>
-
-                        <div
-                          className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer"
-                          onClick={() => {
-                            openWindow(
-                              'help',
-                              'Help',
-                              <div className="font-win95 p-2">
-                                <h2 className="text-xl font-bold mb-4">Help</h2>
-                                <p>This is a portfolio site styled like Windows 95.</p>
-                                <p className="mt-2">Click on desktop icons or use the Start menu to explore.</p>
-                              </div>
-                            );
-                            setShowStartMenu(false);
-                          }}
-                        >
-                          <span className="mr-2">ℹ️</span>
-                          <span>Help</span>
-                        </div>
-
-                        <div className="border-t border-gray-400 border-b border-white my-1"></div>
-
-                        <div className="hover:bg-win95-blue hover:text-white p-1 flex items-center cursor-pointer">
-                          <span className="mr-2">🚪</span>
-                          <span>Shut Down...</span>
                         </div>
                       </div>
                     </div>

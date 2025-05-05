@@ -76,12 +76,12 @@ function App() {
           <div className="text-center">
             <div className="bg-win95-blue w-[320px] h-[220px] flex flex-col justify-center items-center p-6 rounded">
               <div className="flex items-center mb-8">
-                <div className="text-4xl text-white mr-3">🪟</div>
+                <div className="text-4xl text-white mr-3">🔮</div>
                 <div className="text-white text-2xl font-bold">Hugo Nicolau OS</div>
               </div>
               
               {/* Progress bar with proper margins */}
-              <div className="w-[80%] h-6 retro-inset bg-gray-200 mt-4">
+              <div className="w-[80%] h-6 retro-inset bg-gray-200 mt-8">
                 {/* Animated progress bar */}
                 <div className="loading-bar bg-win95-blue h-full" style={{width: '0%'}}></div>
               </div>
