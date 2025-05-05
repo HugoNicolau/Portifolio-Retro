@@ -146,3 +146,23 @@ body, html {
   writing-mode: vertical-lr;
   text-orientation: mixed;
 }
+
+/* Add this progress bar animation */
+@keyframes progressBar {
+  0% { width: 0%; }
+  10% { width: 5%; }
+  20% { width: 15%; }
+  30% { width: 25%; }
+  40% { width: 40%; }
+  50% { width: 55%; }
+  60% { width: 65%; }
+  70% { width: 75%; }
+  80% { width: 85%; }
+  90% { width: 95%; }
+  100% { width: 100%; }
+}
+
+.loading-bar {
+  animation: progressBar 2s ease-in-out forwards;
+  transform-origin: left;
+}
