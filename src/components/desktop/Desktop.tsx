@@ -18,7 +18,7 @@ const wallpapers = [
 const projects = [
   {
     id: 'project1',
-    title: 'Portfolio Site',
+    title: 'Portfolio Retro OS',
     icon: '🌐',
     content: (
       <div className='text-black'>
@@ -69,10 +69,16 @@ const projects = [
             <span className="mr-1">🐙</span>
             View Source
           </a>
-          <button className="retro-button flex items-center">
+          <div className="flex mt-4 gap-2">
+            <a
+              href="https://www.youtube.com/watch?v=tRTmhhSL0aU"
+              target='_blank'
+              className="retro-button flex items-center ml-2"
+            >
             <span className="mr-1">📝</span>
             Development Notes
-          </button>
+            </a>
+          </div>
         </div>
       </div>
     )
