@@ -1,0 +1,272 @@
+@import "tailwindcss";
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Add these utility classes for Win95 styling */
+
+.retro-inset {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #808080 #fff #fff #808080;
+}
+
+.retro-outset {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #fff #808080 #808080 #fff;
+}
+
+.retro-button {
+  background-color: #c0c0c0;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #fff #808080 #808080 #fff;
+  padding: 2px 6px;
+  color: black;
+  font-size: 12px;
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.retro-button:active {
+  border-color: #808080 #fff #fff #808080;
+  padding-top: 3px;
+  padding-left: 7px;
+  padding-bottom: 1px;
+  padding-right: 5px;
+  box-shadow: none;
+}
+
+/* Scrollbar styling to match Win95 */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+  background-color: #c0c0c0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+}
+
+::-webkit-scrollbar-button {
+  background-color: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #808080 #808080 #fff;
+  height: 16px;
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #c0c0c0;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #c0c0c0;
+}
+
+@theme {
+  --color-retro-dark: #1A1F2C;
+  --color-retro-window: #C0C0C0;
+  --color-retro-border: #9F9EA1;
+  --color-retro-text: #000000;
+  --color-retro-accent: #000080;
+  --color-retro-taskbar: #000080;
+  --color-retro-desktop: #008080;
+  --color-retro-button: #C0C0C0;
+
+  --color-win95-gray: #C0C0C0;
+  --color-win95-blue: #000080;
+  --color-win95-teal: #008080;
+  --color-win95-green: #008000;
+  --color-win95-white: #FFFFFF;
+  --color-win95-black: #000000;
+  --color-win95-shadow: #808080;
+  --color-win95-highlight: #FFFFFF;
+
+  --font-pixel: "Press Start 2P", cursive;
+  --font-system: "VT323", monospace, "MS Sans Serif", Arial;
+  --font-win95: "MS Sans Serif", Arial, sans-serif;
+
+  --shadow-retro: 2px 2px 0px 0px rgba(0,0,0,0.5);
+  --shadow-window: 2px 2px 4px 0px rgba(0,0,0,0.5);
+  --shadow-win95-out: inset 1px 1px 0px #FFFFFF, inset -1px -1px 0px #808080;
+  --shadow-win95-in: inset 1px 1px 0px #808080, inset -1px -1px 0px #FFFFFF;
+}
+
+/* Monitor frame styles */
+.monitor-frame {
+  box-shadow: 
+    0 0 0 1px #111,
+    0 0 30px rgba(0, 0, 0, 0.7);
+}
+
+.monitor-screen {
+  position: relative;
+  background-color: black;
+}
+
+/* CRT screen effect - curved edges */
+.monitor-screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Screen edge dark vignette effect */
+.monitor-screen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  pointer-events: none;
+  z-index: 11;
+}
+
+/* Adjust z-indices of existing components */
+.scanline {
+  z-index: 12;
+}
+
+/* Windows 95 styling for window content */
+.window-content {
+  color: black;
+  background-color: #fff;
+}
+
+/* Add proper styling for all headings in windows */
+.window-content h1,
+.window-content h2,
+.window-content h3,
+.window-content h4,
+.window-content h5,
+.window-content h6 {
+  color: black;
+}
+
+/* Add proper styling for paragraphs */
+.window-content p {
+  color: black;
+}
+
+/* Add these styles for window controls */
+
+.window-titlebar button {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  border-color: #dfdfdf #000 #000 #dfdfdf;
+  box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #707070 inset;
+  background-color: #c0c0c0;
+}
+
+.window-titlebar button:active {
+  border-color: #000 #dfdfdf #dfdfdf #000;
+  box-shadow: -1px -1px 0 #fff inset, 1px 1px 0 #707070 inset;
+  padding: 1px 0 0 1px;
+}
+
+/* Selection highlight with reduced opacity */
+::selection {
+  background-color: rgba(0, 0, 128, 0.3); /* Windows 95/98 blue with 30% opacity */
+  color: inherit;
+}
+
+/* For Firefox */
+::-moz-selection {
+  background-color: rgba(0, 0, 128, 0.3);
+  color: inherit;
+}
+
+/* For empty selection (when clicking on empty areas) */
+.window-content:focus {
+  outline: none;
+}
+
+/* For desktop/background area */
+.desktop-background::selection {
+  background-color: rgba(0, 0, 128, 0.2); /* Even lighter */
+}

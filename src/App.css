@@ -1,0 +1,168 @@
+/* Add these reset styles at the top */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* CRT animations */
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.9; }
+  10% { opacity: 0.97; }
+  15% { opacity: 1; }
+  50% { opacity: 0.98; }
+  90% { opacity: 1; }
+  95% { opacity: 0.9; }
+  100% { opacity: 0.97; }
+}
+
+/* Apply CRT effect to the entire app */
+.crt-effect {
+  position: relative;
+  animation: flicker 0.15s infinite;
+  overflow: hidden;
+}
+
+.crt-effect::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(to bottom, 
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Apply retro cursor */
+.retro-cursor {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path fill='white' d='M0,0 L0,10 L2,8 L4,12 L6,11 L4,7 L7,7 z'/></svg>") 0 0, auto;
+}
+
+/* Boot screen animation */
+@keyframes bootScreen {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.boot-screen {
+  animation: bootScreen 3s ease-in-out forwards;
+}
+
+/* CRT turn on animation */
+@keyframes crtOn {
+  0% { transform: scale(0.8); filter: brightness(0); }
+  40% { transform: scale(1.05); filter: brightness(2); }
+  60% { transform: scale(0.98); filter: brightness(0.8); }
+  80% { transform: scale(1.01); filter: brightness(1.1); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.crt-on {
+  animation: crtOn 1.5s ease-out;
+}
+
+/* Scanline animation */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scanline {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 999;
+  animation: scanline 6s linear infinite;
+}
+
+/* Writing vertical for Start menu */
+.writing-vertical {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+}
+
+/* Add this progress bar animation */
+@keyframes progressBar {
+  0% { width: 0%; }
+  10% { width: 5%; }
+  20% { width: 15%; }
+  30% { width: 25%; }
+  40% { width: 40%; }
+  50% { width: 55%; }
+  60% { width: 65%; }
+  70% { width: 75%; }
+  80% { width: 85%; }
+  90% { width: 95%; }
+  100% { width: 100%; }
+}
+
+.loading-bar {
+  animation: progressBar 2s ease-in-out forwards;
+  transform-origin: left;
+}
