@@ -77,7 +77,7 @@ export function Window({
       // Save current position before maximizing
       setPreMaximizePosition(position);
     }
-    
+    console.log(preMaximizePosition);
     // Toggle maximized state
     setIsMaximized(!isMaximized);
     

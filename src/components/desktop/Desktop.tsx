@@ -505,21 +505,21 @@ export function Desktop() {
     setIconPositions(newPositions);
   };
 
-  // Convert grid cell to pixel position
-  const gridCellToPosition = (col: number, row: number): { x: number, y: number } => {
-    return {
-      x: col * GRID_CELL_WIDTH,
-      y: row * GRID_CELL_HEIGHT
-    };
-  };
+  // // Convert grid cell to pixel position
+  // const gridCellToPosition = (col: number, row: number): { x: number, y: number } => {
+  //   return {
+  //     x: col * GRID_CELL_WIDTH,
+  //     y: row * GRID_CELL_HEIGHT
+  //   };
+  // };
 
-  // Convert pixel position to grid cell
-  const positionToGridCell = (x: number, y: number): { col: number, row: number } => {
-    return {
-      col: Math.floor(x / GRID_CELL_WIDTH),
-      row: Math.floor(y / GRID_CELL_HEIGHT)
-    };
-  };
+  // // Convert pixel position to grid cell
+  // const positionToGridCell = (x: number, y: number): { col: number, row: number } => {
+  //   return {
+  //     col: Math.floor(x / GRID_CELL_WIDTH),
+  //     row: Math.floor(y / GRID_CELL_HEIGHT)
+  //   };
+  // };
 
   // Update clock
   useEffect(() => {
@@ -539,7 +539,7 @@ export function Desktop() {
     return () => document.removeEventListener('mousedown', handleDocumentClick);
   }, [showStartMenu]);
 
-  const handleWallpaperChange = (wallpaperId) => {
+  const handleWallpaperChange = (wallpaperId: string) => {
     const newWallpaper = wallpapers.find(w => w.id === wallpaperId);
     if (newWallpaper) {
       setSelectedWallpaper(newWallpaper);
@@ -830,33 +830,33 @@ export function Desktop() {
   }, [draggingIcon, dragOffset]);
 
   // Icon click handler that differentiates between clicks and drags
-  const handleIconClick = (iconId: string, onClick: () => void) => (e: React.MouseEvent) => {
-    // If the mouse moved significantly, treat as drag not click
-    const iconPos = iconPositions.find(p => p.id === iconId);
-    if (!iconPos) return;
+  // const handleIconClick = (iconId: string, onClick: () => void) => (e: React.MouseEvent) => {
+  //   // If the mouse moved significantly, treat as drag not click
+  //   const iconPos = iconPositions.find(p => p.id === iconId);
+  //   if (!iconPos) return;
 
-    // Store start position to detect if this is a drag or click
-    const startX = iconPos.x;
-    const startY = iconPos.y;
+  //   // Store start position to detect if this is a drag or click
+  //   const startX = iconPos.x;
+  //   const startY = iconPos.y;
 
-    // Start dragging
-    handleIconDragStart(e, iconId);
+  //   // Start dragging
+  //   handleIconDragStart(e, iconId);
 
-    // Create a one-time mouseup handler to check if this was a click
-    const checkIfClick = (e: MouseEvent) => {
-      window.removeEventListener('mouseup', checkIfClick);
+  //   // Create a one-time mouseup handler to check if this was a click
+  //   const checkIfClick = (e: MouseEvent) => {
+  //     window.removeEventListener('mouseup', checkIfClick);
 
-      const endPos = iconPositions.find(p => p.id === iconId);
-      if (!endPos) return;
+  //     const endPos = iconPositions.find(p => p.id === iconId);
+  //     if (!endPos) return;
 
-      // If position hasn't moved much, consider it a click
-      if (Math.abs(endPos.x - startX) < 5 && Math.abs(endPos.y - startY) < 5) {
-        onClick();
-      }
-    };
+  //     // If position hasn't moved much, consider it a click
+  //     if (Math.abs(endPos.x - startX) < 5 && Math.abs(endPos.y - startY) < 5) {
+  //       onClick();
+  //     }
+  //   };
 
-    window.addEventListener('mouseup', checkIfClick);
-  };
+  //   window.addEventListener('mouseup', checkIfClick);
+  // };
 
   // Add this function to Desktop component
   const handleDesktopContextMenu = (e: React.MouseEvent) => {
