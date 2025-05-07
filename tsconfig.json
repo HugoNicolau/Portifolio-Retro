@@ -11,8 +11,5 @@
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "types": ["node", "react"],
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
   }
 }
